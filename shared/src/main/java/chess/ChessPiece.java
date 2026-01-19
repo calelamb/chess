@@ -1,7 +1,7 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -70,10 +70,28 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
-        if (piece.getPieceType() == PieceType.BISHOP) {
-            return List.of(new ChessMove(new ChessPosition(5, 4), new ChessPosition(1, 8), null));
+        ArrayList<ChessMove> moves = new ArrayList<>();
+
+
+        if (piece.getPieceType() == PieceType.KING) {
+            for (int i = -1; i < 2; i++) {
+                for (int j = -1; j < 2; j++) {
+                    if (i == 0 && j == 0) {
+                        continue;
+                    }
+                    if (myPosition.getRow() + i >= 1 && myPosition.getColumn() + j >= 1
+                            && myPosition.getRow() + i <= 8 && myPosition.getColumn() + j <= 8) {
+                        ChessPosition pos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + j);
+                        ChessPiece pieceCheck = board.getPiece(pos);
+                        if (pieceCheck == null || pieceCheck.getTeamColor() != piece.getTeamColor()) {
+                            moves.add(new ChessMove(myPosition, pos, null));
+                        }
+
+                    }
+                }
+            }
         }
 
-
+        return moves;
     }
 }
