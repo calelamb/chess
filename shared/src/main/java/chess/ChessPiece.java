@@ -319,6 +319,29 @@ public class ChessPiece {
             }
 
         }
+        //knight algorithm
+        if (piece.getPieceType() == PieceType.KNIGHT) {
+            ChessPosition[] potentialMoves = {new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() + 1),
+                    new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() - 1),
+                    new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() + 1),
+                    new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() - 1),
+                    new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 2),
+                    new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() + 2),
+                    new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 2),
+                    new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 2),
+            };
+
+            for (ChessPosition move : potentialMoves) {
+                if (move.getRow() >= 1 && move.getColumn() >= 1 && move.getRow() <= 8 && move.getColumn() <= 8) {
+                    ChessPiece pieceCheck = board.getPiece(move);
+                    if (pieceCheck == null || pieceCheck.getTeamColor() != piece.getTeamColor()) {
+                        moves.add(new ChessMove(myPosition, move, null));
+                    }
+
+                }
+            }
+
+        }
         return moves;
     }
 }
