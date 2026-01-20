@@ -24,12 +24,7 @@ public class ChessPiece {
      * The various different chess piece options
      */
     public enum PieceType {
-        KING,
-        QUEEN,
-        BISHOP,
-        KNIGHT,
-        ROOK,
-        PAWN
+        KING, QUEEN, BISHOP, KNIGHT, ROOK, PAWN
     }
 
     /**
@@ -79,8 +74,7 @@ public class ChessPiece {
                     if (i == 0 && j == 0) {
                         continue;
                     }
-                    if (myPosition.getRow() + i >= 1 && myPosition.getColumn() + j >= 1
-                            && myPosition.getRow() + i <= 8 && myPosition.getColumn() + j <= 8) {
+                    if (myPosition.getRow() + i >= 1 && myPosition.getColumn() + j >= 1 && myPosition.getRow() + i <= 8 && myPosition.getColumn() + j <= 8) {
                         ChessPosition pos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + j);
                         ChessPiece pieceCheck = board.getPiece(pos);
                         if (pieceCheck == null || pieceCheck.getTeamColor() != piece.getTeamColor()) {
@@ -321,15 +315,7 @@ public class ChessPiece {
         }
         //knight algorithm
         if (piece.getPieceType() == PieceType.KNIGHT) {
-            ChessPosition[] potentialMoves = {new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() + 1),
-                    new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() - 1),
-                    new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() + 1),
-                    new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() - 1),
-                    new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 2),
-                    new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() + 2),
-                    new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 2),
-                    new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 2),
-            };
+            ChessPosition[] potentialMoves = {new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() + 1), new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() - 1), new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() + 1), new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() - 1), new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 2), new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() + 2), new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 2), new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 2),};
 
             for (ChessPosition move : potentialMoves) {
                 if (move.getRow() >= 1 && move.getColumn() >= 1 && move.getRow() <= 8 && move.getColumn() <= 8) {
@@ -340,6 +326,32 @@ public class ChessPiece {
 
                 }
             }
+
+        }
+
+        //pawn algorithm
+        if (piece.getPieceType() == PieceType.PAWN) {
+            int direction;
+
+            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                direction = 1;
+
+            } else {
+                direction = -1;
+            }
+            ChessPosition pos = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn());
+            ChessPiece pieceCheck = board.getPiece(pos);
+            if (pieceCheck == null) {
+                if (pos.getRow() == 1 || pos.getRow() == 8) {
+                    moves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
+                    moves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
+                    moves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
+                    moves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
+                } else {
+                    moves.add(new ChessMove(myPosition, pos, null));
+                }
+            }
+
 
         }
         return moves;
