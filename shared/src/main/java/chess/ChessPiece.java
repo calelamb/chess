@@ -42,7 +42,7 @@ public class ChessPiece {
 
     }
 
-    public boolean validBounds (ChessPosition pos) {
+    public boolean validBounds(ChessPosition pos) {
         return pos.getRow() >= 1 && pos.getRow() <= 8 && pos.getColumn() >= 1 && pos.getColumn() <= 8;
     }
 
@@ -346,12 +346,15 @@ public class ChessPiece {
 
             //forward movement logic
             ChessPosition pos = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn());
-            ChessPosition twoSquarePos = new ChessPosition(pos.getRow() + direction, pos.getColumn());
             ChessPiece pieceCheck = board.getPiece(pos);
-            ChessPiece twoSquareCheck = board.getPiece(twoSquarePos);
             if (pieceCheck == null) {
-                if ((myPosition.getRow() == 2 || myPosition.getRow() == 7) && twoSquareCheck == null) {
-                    moves.add(new ChessMove(myPosition, twoSquarePos, null));
+                if (((myPosition.getRow() == 2 && piece.getTeamColor() == ChessGame.TeamColor.WHITE) || (myPosition.getRow() == 7) && piece.getTeamColor() == ChessGame.TeamColor.BLACK)) {
+                    ChessPosition twoSquarePos = new ChessPosition(pos.getRow() + direction, pos.getColumn());
+                    ChessPiece twoSquareCheck = board.getPiece(twoSquarePos);
+
+                    if (twoSquareCheck == null) {
+                        moves.add(new ChessMove(myPosition, twoSquarePos, null));
+                    }
                 }
                 if (pos.getRow() == 1 || pos.getRow() == 8) {
                     moves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
@@ -369,9 +372,19 @@ public class ChessPiece {
             };
 
             for (ChessPosition position : diagonalPositions) {
-                ChessPiece diagonalPiece = board.getPiece(position);
-                if (validBounds(position) && diagonalPiece.getTeamColor() != piece.getTeamColor()) {
-                    moves.add(new ChessMove(myPosition, position, null));
+                if (validBounds(position)) {
+                    ChessPiece diagonalPiece = board.getPiece(position);
+                    if (diagonalPiece != null && diagonalPiece.getTeamColor() != piece.getTeamColor()) {
+                        if (position.getRow() == 1 || position.getRow() == 8) {
+                            moves.add(new ChessMove(myPosition, position, PieceType.QUEEN));
+                            moves.add(new ChessMove(myPosition, position, PieceType.BISHOP));
+                            moves.add(new ChessMove(myPosition, position, PieceType.KNIGHT));
+                            moves.add(new ChessMove(myPosition, position, PieceType.ROOK));
+                        } else {
+                            moves.add(new ChessMove(myPosition, position, null));
+                        }
+                    }
+
                 }
             }
         }
