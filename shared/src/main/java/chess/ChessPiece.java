@@ -42,6 +42,10 @@ public class ChessPiece {
 
     }
 
+    public boolean validBounds (ChessPosition pos) {
+        return pos.getRow() >= 1 && pos.getRow() <= 8 && pos.getColumn() >= 1 && pos.getColumn() <= 8;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
@@ -339,9 +343,16 @@ public class ChessPiece {
             } else {
                 direction = -1;
             }
+
+            //forward movement logic
             ChessPosition pos = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn());
+            ChessPosition twoSquarePos = new ChessPosition(pos.getRow() + direction, pos.getColumn());
             ChessPiece pieceCheck = board.getPiece(pos);
+            ChessPiece twoSquareCheck = board.getPiece(twoSquarePos);
             if (pieceCheck == null) {
+                if ((myPosition.getRow() == 2 || myPosition.getRow() == 7) && twoSquareCheck == null) {
+                    moves.add(new ChessMove(myPosition, twoSquarePos, null));
+                }
                 if (pos.getRow() == 1 || pos.getRow() == 8) {
                     moves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
                     moves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
@@ -352,7 +363,17 @@ public class ChessPiece {
                 }
             }
 
+            //diagonal capture logic
+            ChessPosition[] diagonalPositions = {new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn() + 1),
+                    new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn() - 1)
+            };
 
+            for (ChessPosition position : diagonalPositions) {
+                ChessPiece diagonalPiece = board.getPiece(position);
+                if (validBounds(position) && diagonalPiece.getTeamColor() != piece.getTeamColor()) {
+                    moves.add(new ChessMove(myPosition, position, null));
+                }
+            }
         }
         return moves;
     }
