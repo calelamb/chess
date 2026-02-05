@@ -348,10 +348,10 @@ public class ChessPiece {
             ChessPosition pos = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn());
             ChessPiece pieceCheck = board.getPiece(pos);
             if (pieceCheck == null) {
-                if (((myPosition.getRow() == 2 && piece.getTeamColor() == ChessGame.TeamColor.WHITE) || (myPosition.getRow() == 7) && piece.getTeamColor() == ChessGame.TeamColor.BLACK)) {
+                if ((myPosition.getRow() == 2 && piece.getTeamColor() == ChessGame.TeamColor.WHITE) ||
+                        (myPosition.getRow() == 7 && piece.getTeamColor() == ChessGame.TeamColor.BLACK)) {
                     ChessPosition twoSquarePos = new ChessPosition(pos.getRow() + direction, pos.getColumn());
                     ChessPiece twoSquareCheck = board.getPiece(twoSquarePos);
-
                     if (twoSquareCheck == null) {
                         moves.add(new ChessMove(myPosition, twoSquarePos, null));
                     }
