@@ -65,6 +65,13 @@ public class ChessGame {
         return copy;
     }
 
+    /**
+     * Helper method that loops through each piece on the board for a specified team,
+     * and returns a boolean value whether that team has no valid moves available.
+     *
+     * @param color team color
+     * @return boolean
+     */
     public boolean noValidMoves(TeamColor color) {
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
