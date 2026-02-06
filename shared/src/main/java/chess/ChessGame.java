@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -43,8 +44,7 @@ public class ChessGame {
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
-        WHITE,
-        BLACK
+        WHITE, BLACK
     }
 
     /**
@@ -104,7 +104,32 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = gameState.getPiece(move.getStartPosition());
+        if (piece == null) {
+            throw new InvalidMoveException("No piece at start position");
+        }
+        Collection<ChessMove> moves = validMoves(move.getStartPosition());
+        if (!piece.getTeamColor().equals(teamTurn)) {
+            throw new InvalidMoveException("Please wait until it is your turn to make a move");
+        }
+        if (moves.contains(move)) {
+            gameState.addPiece(move.getEndPosition(), piece);
+            gameState.addPiece(move.getStartPosition(), null);
+            if (move.getPromotionPiece() != null) {
+                gameState.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+            }
+            switch (teamTurn) {
+                case BLACK:
+                    teamTurn = TeamColor.WHITE;
+                    break;
+
+                case WHITE:
+                    teamTurn = TeamColor.BLACK;
+                    break;
+            }
+        } else {
+            throw new InvalidMoveException("Invalid move, please select a valid move");
+        }
     }
 
     /**
@@ -184,5 +209,19 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return gameState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return teamTurn == chessGame.teamTurn && Objects.equals(gameState, chessGame.gameState);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamTurn, gameState);
     }
 }
