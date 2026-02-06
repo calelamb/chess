@@ -82,7 +82,7 @@ public class ChessGame {
                     continue;
                 } else {
                     Collection<ChessMove> moves = validMoves(new ChessPosition(i, j));
-                    if (!moves.isEmpty()) {
+                    if (moves != null && !moves.isEmpty()) {
                         return false;
                     }
                 }
