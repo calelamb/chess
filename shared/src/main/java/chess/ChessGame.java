@@ -48,6 +48,24 @@ public class ChessGame {
     }
 
     /**
+     * Takes in a ChessBoard object and returns a copy of the board
+     *
+     * @param board the ChessBoard object to be copied
+     * @return a copy of the ChessBoard
+     */
+    public ChessBoard copyBoard(ChessBoard board) {
+
+        ChessBoard copy = new ChessBoard();
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+                copy.addPiece(new ChessPosition(i, j), piece);
+            }
+        }
+        return copy;
+    }
+
+    /**
      * Gets a valid moves for a piece at the given location
      *
      * @param startPosition the piece to get valid moves for
@@ -55,11 +73,28 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+        ChessBoard originalBoard = this.gameState;
+
         ChessPiece piece = gameState.getPiece(startPosition);
-        Collection<ChessMove> moves = piece.pieceMoves(gameState, startPosition);
-        for (ChessMove move : moves) {
-            if ()
+        if (piece == null) {
+            return null;
         }
+
+        Collection<ChessMove> pieceMoves = piece.pieceMoves(gameState, startPosition);
+        for (ChessMove move : pieceMoves) {
+            ChessBoard copy = copyBoard(gameState);
+            copy.addPiece(move.getEndPosition(), piece);
+            copy.addPiece(move.getStartPosition(), null);
+            gameState = copy;
+
+            if (!isInCheck(piece.getTeamColor())) {
+                validMoves.add(move);
+            }
+            gameState = originalBoard;
+        }
+        return validMoves;
     }
 
     /**
