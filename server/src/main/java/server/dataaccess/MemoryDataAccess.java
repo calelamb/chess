@@ -11,32 +11,34 @@ import java.util.List;
 public class MemoryDataAccess implements DataAccess {
 
     private HashMap<String, UserData> users = new HashMap<>();
-    private HashMap<String, AuthData> auth = new HashMap<>();
+    private HashMap<String, AuthData> authMap = new HashMap<>();
     private HashMap<Integer, GameData> games = new HashMap<>();
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return null;
+        return users.get(username);
     }
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
+        users.put(user.username(), user);
 
     }
 
     @Override
     public void createAuth(AuthData auth) throws DataAccessException {
+        authMap.put(auth.authToken(), auth);
 
     }
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        return null;
+        return authMap.get(authToken);
     }
 
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
-
+        authMap.remove(authToken);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class MemoryDataAccess implements DataAccess {
     @Override
     public void clear() throws DataAccessException {
         games.clear();
-        auth.clear();
+        authMap.clear();
         users.clear();
     }
 }
