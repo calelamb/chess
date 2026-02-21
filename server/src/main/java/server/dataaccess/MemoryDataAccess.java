@@ -5,9 +5,15 @@ import model.GameData;
 import model.UserData;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
-public class MemoryDataAccess implements DataAccess{
+public class MemoryDataAccess implements DataAccess {
+
+    private HashMap<String, UserData> users = new HashMap<>();
+    private HashMap<String, AuthData> auth = new HashMap<>();
+    private HashMap<Integer, GameData> games = new HashMap<>();
+
     @Override
     public UserData getUser(String username) throws DataAccessException {
         return null;
@@ -50,6 +56,8 @@ public class MemoryDataAccess implements DataAccess{
 
     @Override
     public void clear() throws DataAccessException {
-
+        games.clear();
+        auth.clear();
+        users.clear();
     }
 }
