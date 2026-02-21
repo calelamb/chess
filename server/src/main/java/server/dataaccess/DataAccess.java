@@ -1,9 +1,9 @@
 package server.dataaccess;
+
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 
-import javax.xml.crypto.Data;
 import java.util.Collection;
 
 /**
@@ -23,7 +23,10 @@ public interface DataAccess {
 
     Collection<GameData> getGames() throws DataAccessException;
 
+    int createGame(GameData gData) throws DataAccessException;
 
+    void updateGame(GameData game) throws DataAccessException;
 
+    void clear() throws DataAccessException;
 
 }
