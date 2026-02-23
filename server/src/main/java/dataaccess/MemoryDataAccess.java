@@ -13,6 +13,7 @@ public class MemoryDataAccess implements DataAccess {
     private HashMap<String, UserData> users = new HashMap<>();
     private HashMap<String, AuthData> authMap = new HashMap<>();
     private HashMap<Integer, GameData> games = new HashMap<>();
+    private int uniqueID = 1;
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
@@ -43,16 +44,18 @@ public class MemoryDataAccess implements DataAccess {
 
     @Override
     public Collection<GameData> getGames() throws DataAccessException {
-        return List.of();
+        return games.values();
     }
 
     @Override
     public int createGame(GameData gData) throws DataAccessException {
-        return 0;
+        games.put(uniqueID, new GameData(uniqueID, gData.whiteUsername(), gData.blackUsername(), gData.gameName(), gData.game()));
+        return uniqueID++;
     }
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
+        games.put(game.gameID(), game);
 
     }
 
