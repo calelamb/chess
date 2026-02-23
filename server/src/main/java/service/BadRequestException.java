@@ -1,5 +1,8 @@
 package service;
 
+/**
+ * Exception thrown when a request is missing required fields or contains invalid data.
+ */
 public class BadRequestException extends Exception {
 
     public BadRequestException(String message) {
