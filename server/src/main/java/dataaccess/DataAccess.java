@@ -71,15 +71,17 @@ public interface DataAccess {
     int createGame(GameData gData) throws DataAccessException;
 
     /**
+     * Replaces an existing game with updated game data
      *
-     * @param game
-     * @throws DataAccessException
+     * @param game the existing GameData object
+     * @throws DataAccessException thrown if there is an error updating game data
      */
     void updateGame(GameData game) throws DataAccessException;
 
     /**
+     * Full reset of a game, clears AuthData, GameData, and UserData
      *
-     * @throws DataAccessException
+     * @throws DataAccessException thrown if there is an error clearing from data
      */
     void clear() throws DataAccessException;
 
