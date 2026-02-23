@@ -7,6 +7,9 @@ import model.UserData;
 
 import java.util.UUID;
 
+/**
+ * Class for the RegisterService endpoint. Handles the registration of a new user, and their auth tokens.
+ */
 public class RegisterService {
 
     private DataAccess data;
@@ -15,6 +18,15 @@ public class RegisterService {
         this.data = d;
     }
 
+    /**
+     * Handles the creation of a new user and generates a unique identifier, then returns the AuthData
+     *
+     * @param d UserData object used to create new user
+     * @return AuthData (unique identifier and session token) of created user
+     * @throws BadRequestException   thrown if bad or missing data is passed
+     * @throws AlreadyTakenException thrown if desired username is already found in the database
+     * @throws DataAccessException   thrown if there is an error creating the user
+     */
     public AuthData createNewUser(UserData d) throws BadRequestException, AlreadyTakenException, DataAccessException {
         if (d.username() == null || d.password() == null || d.email() == null) {
             throw new BadRequestException("One of more fields is empty");
