@@ -21,7 +21,7 @@ public interface DataAccess {
     UserData getUser(String username) throws DataAccessException;
 
     /**
-     * Creates a UserData object based on user data
+     * Stores a UserData object based on user data
      *
      * @param user UserData used to createUser
      * @throws DataAccessException thrown if user cannot be created
@@ -32,37 +32,41 @@ public interface DataAccess {
      * Creates a AuthData object with data from the auth param
      *
      * @param auth AuthData used to createAuth
-     * @throws DataAccessException thrown if there's an error accessing the data
+     * @throws DataAccessException thrown if there's an error creating the auth
      */
     void createAuth(AuthData auth) throws DataAccessException;
 
     /**
+     * Returns an AuthData object, found by the authToken
      *
-     * @param authToken
-     * @return
-     * @throws DataAccessException
+     * @param authToken a unique session token
+     * @return an AuthData object
+     * @throws DataAccessException thrown if there's an issue accessing the data
      */
     AuthData getAuth(String authToken) throws DataAccessException;
 
     /**
+     * Deletes an AuthData object
      *
-     * @param authToken
-     * @throws DataAccessException
+     * @param authToken a unique session token
+     * @throws DataAccessException thrown if there's an issue deleting the object
      */
     void deleteAuth(String authToken) throws DataAccessException;
 
     /**
+     * Returns a Collection of all active chess games
      *
-     * @return
-     * @throws DataAccessException
+     * @return a Collection of games
+     * @throws DataAccessException thrown if there's an issue retrieving games
      */
     Collection<GameData> getGames() throws DataAccessException;
 
     /**
+     * Creates a new Chess game with unique game data
      *
-     * @param gData
-     * @return
-     * @throws DataAccessException
+     * @param gData GameData record containing the unique data for the game
+     * @return the GameID
+     * @throws DataAccessException thrown if there's an error creating the game
      */
     int createGame(GameData gData) throws DataAccessException;
 
