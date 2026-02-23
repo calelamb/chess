@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -69,6 +70,15 @@ public interface DataAccess {
      * @throws DataAccessException thrown if there's an error creating the game
      */
     int createGame(GameData gData) throws DataAccessException;
+
+    /**
+     * Retrieve a specified game with the given game ID.
+     *
+     * @param gID the game ID to search for
+     * @return the specified game data
+     * @throws DataAccessException thrown if there is an issue retrieving gameID
+     */
+    GameData getGame(int gID) throws DataAccessException;
 
     /**
      * Replaces an existing game with updated game data
