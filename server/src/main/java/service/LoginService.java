@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public class LoginService {
 
-    private DataAccess data;
+    private final DataAccess data;
 
     public LoginService(DataAccess d) {
         this.data = d;

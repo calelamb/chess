@@ -5,11 +5,11 @@ import dataaccess.DataAccessException;
 import model.AuthData;
 
 /**
- * Logout Service endpoint class. Contains method to delete a user
+ * Logout Service endpoint class. Handles ending a user's session
  */
 public class LogoutService {
 
-    private DataAccess data;
+    private final DataAccess data;
 
     public LogoutService(DataAccess d) {
         this.data = d;

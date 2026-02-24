@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public class RegisterService {
 
-    private DataAccess data;
+    private final DataAccess data;
 
     public RegisterService(DataAccess d) {
         this.data = d;
