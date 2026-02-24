@@ -21,7 +21,7 @@ public class ListGamesService {
     /**
      * Takes in an auth token and returns a Collection of the active games associated with that token.
      *
-     * @param authToken a session id
+     * @param authToken Unique authentication token used to verify the user's session
      * @return games under that session
      * @throws UnauthorizedException thrown if auth token is invalid or null
      * @throws DataAccessException   thrown if there is an error accessing the data from memory

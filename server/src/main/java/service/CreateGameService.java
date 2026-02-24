@@ -17,6 +17,15 @@ public class CreateGameService {
         this.data = d;
     }
 
+    /**
+     * Verifies the auth token, creates a new Chess game with the given name, and returns the unique game ID.
+     *
+     * @param authToken Unique authentication token used to verify the user's session
+     * @param gameName
+     * @return
+     * @throws UnauthorizedException
+     * @throws DataAccessException
+     */
     public int newGame(String authToken, String gameName) throws UnauthorizedException, DataAccessException {
         AuthData existingAuth = data.getAuth(authToken);
         if (existingAuth != null) {

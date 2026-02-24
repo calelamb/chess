@@ -19,7 +19,7 @@ public class LogoutService {
      * Ends a specified game session identified by auth/session token. Verifies token first,
      * then deletes from store.
      *
-     * @param authToken unique session id
+     * @param authToken Unique authentication token used to verify the user's session
      * @throws DataAccessException   thrown if there is an error fetching the auth token
      * @throws UnauthorizedException thrown if auth token given cannot be verified in the data store.
      */
