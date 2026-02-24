@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 /**
  * MemoryDataAccess class that inherits methods from the DataAccess interface, used to manipulate User, Game, and Auth data in a chess game.
- * Stores data in memory using the built in HashMap structure for use in the Chess server.
+ * Stores data in memory using the built-in HashMap structure for use in the Chess server.
  *
  */
 public class MemoryDataAccess implements DataAccess {
