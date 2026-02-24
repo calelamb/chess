@@ -2,7 +2,7 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
-import model.UserData;
+import model.AuthData;
 
 public class LogoutService {
 
@@ -16,7 +16,7 @@ public class LogoutService {
      *
      */
     public void endSession(String authToken) throws DataAccessException, UnauthorizedException {
-        UserData token = data.getUser(authToken);
+        AuthData token = data.getAuth(authToken);
         if (token != null) {
             data.deleteAuth(authToken);
         } else {
