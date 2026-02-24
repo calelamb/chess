@@ -7,7 +7,7 @@ import model.AuthData;
 import model.GameData;
 
 /**
- *
+ * Handles the creation of a new Chess game after verifying the user's authentication token
  */
 public class CreateGameService {
 
@@ -20,11 +20,11 @@ public class CreateGameService {
     /**
      * Verifies the auth token, creates a new Chess game with the given name, and returns the unique game ID.
      *
-     * @param authToken Unique authentication token used to verify the user's session
-     * @param gameName
-     * @return
-     * @throws UnauthorizedException
-     * @throws DataAccessException
+     * @param authToken unique authentication token used to verify the user's session
+     * @param gameName  name of the newly created game
+     * @return the gameID of the newly created game
+     * @throws UnauthorizedException thrown if there's an error verifying the auth token
+     * @throws DataAccessException   thrown if there's an error accessing the game data
      */
     public int newGame(String authToken, String gameName) throws UnauthorizedException, DataAccessException {
         AuthData existingAuth = data.getAuth(authToken);
