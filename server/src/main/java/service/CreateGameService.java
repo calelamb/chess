@@ -29,8 +29,7 @@ public class CreateGameService {
     public int newGame(String authToken, String gameName) throws UnauthorizedException, DataAccessException {
         AuthData existingAuth = data.getAuth(authToken);
         if (existingAuth != null) {
-            int gID = data.createGame(new GameData(0, null, null, gameName, new ChessGame()));
-            return gID;
+            return data.createGame(new GameData(0, null, null, gameName, new ChessGame()));
         } else {
             throw new UnauthorizedException("Auth token could not be verified");
         }
