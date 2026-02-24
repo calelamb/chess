@@ -6,7 +6,6 @@ import model.UserData;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * MemoryDataAccess class that inherits methods from the DataAccess interface, used to manipulate User, Game, and Auth data in a chess game.
