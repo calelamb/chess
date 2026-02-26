@@ -3,7 +3,10 @@ package server;
 import io.javalin.http.Context;
 import service.ClearService;
 
-public class ClearHandler extends Handler{
+/**
+ * Handles the HTTP DELETE request for the /db endpoint, clearing all data from the server.
+ */
+public class ClearHandler extends Handler {
 
     private final ClearService c;
 
@@ -11,6 +14,12 @@ public class ClearHandler extends Handler{
         this.c = c;
     }
 
+    /**
+     * Handler for the ClearService, clears data from the server and sends a 200 status message.
+     *
+     * @param ctx the Javalin context object for the HTTP request and response
+     * @throws Exception thrown if there was an error clearing the data
+     */
     public void handle(Context ctx) throws Exception {
         c.clear();
         ctx.status(200);
