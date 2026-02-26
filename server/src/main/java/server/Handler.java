@@ -22,9 +22,10 @@ public class Handler {
     }
 
     /**
+     * Takes in an Object, and serializes the input and returns a JSON string.
      *
-     * @param o
-     * @return
+     * @param o an arbitrary object
+     * @return the serialized JSON string
      */
     public String serialize(Object o) {
         return gson.toJson(o);
