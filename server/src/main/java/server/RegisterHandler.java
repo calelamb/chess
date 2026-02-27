@@ -34,7 +34,10 @@ public class RegisterHandler extends Handler {
             ctx.result(serialize(newAuth));
         } catch (BadRequestException e) {
             ctx.status(400);
-            ctx.result()
+            ctx.result(serialize(new ErrorMessage("Error: bad request")));
+        } catch (AlreadyTakenException e) {
+            ctx.status(403);
+            ctx.result(serialize(new ErrorMessage("Error: already taken")));
         }
     }
 }
