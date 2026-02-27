@@ -7,7 +7,7 @@ import service.LoginService;
 import service.UnauthorizedException;
 
 /**
- *
+ * Handles the HTTP POST request for the endpoint, logging the user in with a validated authorization token.
  */
 public class LoginHandler extends Handler {
 
@@ -18,9 +18,10 @@ public class LoginHandler extends Handler {
     }
 
     /**
+     * Deserializes the request body into a UserData object, and logs the user in with their authorization token.
      *
-     * @param ctx
-     * @throws Exception
+     * @param ctx Context object passed in
+     * @throws Exception thrown if there's an error
      */
     public void handle(Context ctx) throws Exception {
         try {
