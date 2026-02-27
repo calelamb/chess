@@ -6,7 +6,7 @@ import model.UserData;
 import service.RegisterService;
 
 /**
- *
+ * Handles the HTTP POST request for the /db endpoint, creating a new user with passed in UserData
  */
 public class RegisterHandler extends Handler {
 
