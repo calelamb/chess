@@ -3,6 +3,8 @@ package server;
 import io.javalin.http.Context;
 import model.AuthData;
 import model.UserData;
+import service.AlreadyTakenException;
+import service.BadRequestException;
 import service.RegisterService;
 
 /**
@@ -23,11 +25,16 @@ public class RegisterHandler extends Handler {
      * @throws Exception Thrown if there's an error creating the new user.
      */
     public void handle(Context ctx) throws Exception {
-        String body = ctx.body();
-        UserData userData = deserialize(body, UserData.class);
+        try {
+            String body = ctx.body();
+            UserData userData = deserialize(body, UserData.class);
 
-        AuthData newAuth = r.createNewUser(userData);
-        ctx.status(200);
-        ctx.result(serialize(newAuth));
+            AuthData newAuth = r.createNewUser(userData);
+            ctx.status(200);
+            ctx.result(serialize(newAuth));
+        } catch (BadRequestException e) {
+            ctx.status(400);
+            ctx.result()
+        }
     }
 }
