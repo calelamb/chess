@@ -6,7 +6,7 @@ import model.UserData;
 import service.RegisterService;
 
 /**
- * Handles the HTTP POST request for the /db endpoint, creating a new user with passed in UserData
+ * Handles the HTTP POST request for the /user endpoint, creating a new user with passed in UserData
  */
 public class RegisterHandler extends Handler {
 
@@ -17,9 +17,10 @@ public class RegisterHandler extends Handler {
     }
 
     /**
+     * Deserializes the request body into a UserData object, registers the new user and writes to the response with ctx.
      *
-     * @param ctx
-     * @throws Exception
+     * @param ctx Context object passed in
+     * @throws Exception Thrown if there's an error creating the new user.
      */
     public void handle(Context ctx) throws Exception {
         String body = ctx.body();
