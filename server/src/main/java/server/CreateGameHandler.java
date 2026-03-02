@@ -32,9 +32,8 @@ public class CreateGameHandler extends Handler {
         try {
             String header = ctx.header("authorization");
             GameNameRequest gameName = deserialize(ctx.body(), GameNameRequest.class);
-            c.newGame(header, gameName.gameName());
             int newID = c.newGame(header, gameName.gameName());
-
+            ctx.status(200);
             ctx.result(serialize(new GameIDResponse(newID)));
         } catch (UnauthorizedException e) {
             ctx.status(401);
