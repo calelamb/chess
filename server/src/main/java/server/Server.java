@@ -2,25 +2,32 @@ package server;
 
 import dataaccess.MemoryDataAccess;
 import io.javalin.*;
-import service.ClearService;
-import service.RegisterService;
+import service.*;
 
 public class Server {
 
     private final Javalin javalin;
 
-    private final MemoryDataAccess m;
 
-
-    public Server(MemoryDataAccess m) {
-        this.m = m;
+    public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
         var dataAccess = new MemoryDataAccess();
         var clearHandler = new ClearHandler(new ClearService(dataAccess));
         var registerHandler = new RegisterHandler(new RegisterService(dataAccess));
+        var loginHandler = new LoginHandler(new LoginService(dataAccess));
+        var logoutHandler = new LogoutHandler(new LogoutService(dataAccess));
+        var listGamesHandler = new ListGamesHandler(new ListGamesService(dataAccess));
+        var createGameHandler = new CreateGameHandler(new CreateGameService(dataAccess));
+        var joinGameHandler = new JoinGameHandler(new JoinGameService(dataAccess));
 
         javalin.delete("/db", clearHandler::handle);
+        javalin.post("/user", registerHandler::handle);
+        javalin.post("/session", loginHandler::handle);
+        javalin.delete("/session", logoutHandler::handle);
+        javalin.get("/game", listGamesHandler::handle);
+        javalin.post("/game", createGameHandler::handle);
+        javalin.put("/game", joinGameHandler::handle);
 
     }
 
