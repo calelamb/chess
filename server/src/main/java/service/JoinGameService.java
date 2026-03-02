@@ -28,37 +28,40 @@ public class JoinGameService {
      * @throws BadRequestException   thrown if the gameID doesn't exist
      */
     public void joinGame(String authToken, String playerColor, int gameID) throws DataAccessException, UnauthorizedException, AlreadyTakenException, BadRequestException {
-        AuthData existingAuth = data.getAuth(authToken);
-        GameData existingGame = data.getGame(gameID);
-        if (existingAuth != null) {
-            if (existingGame != null) {
-                if (playerColor.equalsIgnoreCase("WHITE") && existingGame.whiteUsername() != null) {
-                    throw new AlreadyTakenException("Player color already taken");
-                }
-                if (playerColor.equalsIgnoreCase("BLACK") && existingGame.blackUsername() != null) {
-                    throw new AlreadyTakenException("Player color already taken");
-                }
+        if (playerColor == null) {
+            throw new BadRequestException("Missing player color");
+        } else {
+            AuthData existingAuth = data.getAuth(authToken);
+            GameData existingGame = data.getGame(gameID);
+            if (existingAuth != null) {
+                if (existingGame != null) {
+                    if (playerColor.equalsIgnoreCase("WHITE") && existingGame.whiteUsername() != null) {
+                        throw new AlreadyTakenException("Player color already taken");
+                    }
+                    if (playerColor.equalsIgnoreCase("BLACK") && existingGame.blackUsername() != null) {
+                        throw new AlreadyTakenException("Player color already taken");
+                    }
 
-                switch (playerColor) {
-                    case "WHITE":
-                        data.updateGame(new GameData(existingGame.gameID(), existingAuth.username(), existingGame.blackUsername(), existingGame.gameName(), existingGame.game()));
-                        break;
+                    switch (playerColor) {
+                        case "WHITE":
+                            data.updateGame(new GameData(existingGame.gameID(), existingAuth.username(), existingGame.blackUsername(), existingGame.gameName(), existingGame.game()));
+                            break;
 
-                    case "BLACK":
-                        data.updateGame(new GameData(existingGame.gameID(), existingGame.whiteUsername(), existingAuth.username(), existingGame.gameName(), existingGame.game()));
-                        break;
+                        case "BLACK":
+                            data.updateGame(new GameData(existingGame.gameID(), existingGame.whiteUsername(), existingAuth.username(), existingGame.gameName(), existingGame.game()));
+                            break;
 
-                    default:
-                        throw new BadRequestException("Invalid player color");
+                        default:
+                            throw new BadRequestException("Invalid player color");
 
+                    }
+                } else {
+                    throw new BadRequestException("Invalid GameID");
                 }
             } else {
-                throw new BadRequestException("Invalid GameID");
+                throw new UnauthorizedException("Auth token could not be verified");
             }
-        } else {
-            throw new UnauthorizedException("Auth token could not be verified");
+
         }
-
     }
-
 }

@@ -26,13 +26,16 @@ public class CreateGameService {
      * @throws UnauthorizedException thrown if there's an error verifying the auth token
      * @throws DataAccessException   thrown if there's an error accessing the game data
      */
-    public int newGame(String authToken, String gameName) throws UnauthorizedException, DataAccessException {
-        AuthData existingAuth = data.getAuth(authToken);
-        if (existingAuth != null) {
-            return data.createGame(new GameData(0, null, null, gameName, new ChessGame()));
+    public int newGame(String authToken, String gameName) throws UnauthorizedException, DataAccessException, BadRequestException {
+        if (gameName == null || gameName.isEmpty()) {
+            throw new BadRequestException("Missing game name");
         } else {
-            throw new UnauthorizedException("Auth token could not be verified");
+            AuthData existingAuth = data.getAuth(authToken);
+            if (existingAuth != null) {
+                return data.createGame(new GameData(0, null, null, gameName, new ChessGame()));
+            } else {
+                throw new UnauthorizedException("Auth token could not be verified");
+            }
         }
-
     }
 }

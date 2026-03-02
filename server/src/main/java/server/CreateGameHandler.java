@@ -1,6 +1,7 @@
 package server;
 
 import io.javalin.http.Context;
+import service.BadRequestException;
 import service.CreateGameService;
 import service.UnauthorizedException;
 
@@ -38,6 +39,9 @@ public class CreateGameHandler extends Handler {
         } catch (UnauthorizedException e) {
             ctx.status(401);
             ctx.result(serialize(new ErrorMessage("Error: unauthorized")));
+        } catch (BadRequestException e) {
+            ctx.status(400);
+            ctx.result(serialize(new ErrorMessage("Error: bad request")));
         }
     }
 }
