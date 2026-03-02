@@ -28,22 +28,26 @@ public class LoginService {
      * @throws UnauthorizedException thrown if there is an error matching username, or password to username
      * @throws DataAccessException   thrown if there is an error accessing the UserData
      */
-    public AuthData loginUser(UserData d) throws UnauthorizedException, DataAccessException {
-        String username = d.username();
-        UserData existingUser = data.getUser(username);
-        if (existingUser != null) {
-            if (d.password().equals(existingUser.password())) {
-
-                String token = UUID.randomUUID().toString();
-                AuthData authData = new AuthData(d.username(), token);
-                data.createAuth(authData);
-
-                return authData;
-            } else {
-                throw new UnauthorizedException("Incorrect password");
-            }
+    public AuthData loginUser(UserData d) throws UnauthorizedException, DataAccessException, BadRequestException {
+        if (d.username() == null || d.password() == null || d.username().isEmpty() || d.password().isEmpty()) {
+            throw new BadRequestException("Missing required fields");
         } else {
-            throw new UnauthorizedException("No user found with that username");
+            String username = d.username();
+            UserData existingUser = data.getUser(username);
+            if (existingUser != null) {
+                if (d.password().equals(existingUser.password())) {
+
+                    String token = UUID.randomUUID().toString();
+                    AuthData authData = new AuthData(d.username(), token);
+                    data.createAuth(authData);
+
+                    return authData;
+                } else {
+                    throw new UnauthorizedException("Incorrect password");
+                }
+            } else {
+                throw new UnauthorizedException("No user found with that username");
+            }
         }
     }
 }

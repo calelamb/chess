@@ -3,6 +3,7 @@ package server;
 import io.javalin.http.Context;
 import model.AuthData;
 import model.UserData;
+import service.BadRequestException;
 import service.LoginService;
 import service.UnauthorizedException;
 
@@ -34,6 +35,9 @@ public class LoginHandler extends Handler {
         } catch (UnauthorizedException e) {
             ctx.status(401);
             ctx.result(serialize(new ErrorMessage("Error: unauthorized")));
+        } catch (BadRequestException e) {
+            ctx.status(400);
+            ctx.result(serialize(new ErrorMessage("Error: bad request")));
         }
     }
 }
