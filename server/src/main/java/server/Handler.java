@@ -7,7 +7,7 @@ import com.google.gson.Gson;
  */
 public class Handler {
 
-    protected static final Gson gson = new Gson();
+    protected static final Gson GSON = new Gson();
 
     /**
      * Takes in a JSON string object and deserializes the contained data to an arbitrary type defined by the class.
@@ -18,7 +18,7 @@ public class Handler {
      * @return the deserialized data in an object of type T
      */
     public <T> T deserialize(String json, Class<T> classType) {
-        return gson.fromJson(json, classType);
+        return GSON.fromJson(json, classType);
     }
 
     /**
@@ -28,6 +28,6 @@ public class Handler {
      * @return the serialized JSON string
      */
     public String serialize(Object o) {
-        return gson.toJson(o);
+        return GSON.toJson(o);
     }
 }

@@ -8,7 +8,8 @@ import model.UserData;
 import java.util.Collection;
 
 /**
- * Interface defining the data access operations for the Chess server. Provides methods for storing and retrieving users, games, and authentication tokens.
+ * Interface defining the data access operations for the Chess server.
+ * Provides methods for storing and retrieving users, games, and authentication tokens.
  */
 public interface DataAccess {
 

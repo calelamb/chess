@@ -44,11 +44,19 @@ public class JoinGameService {
 
                     switch (playerColor) {
                         case "WHITE":
-                            data.updateGame(new GameData(existingGame.gameID(), existingAuth.username(), existingGame.blackUsername(), existingGame.gameName(), existingGame.game()));
+                            data.updateGame(new GameData(existingGame.gameID(),
+                                    existingAuth.username(),
+                                    existingGame.blackUsername(),
+                                    existingGame.gameName(),
+                                    existingGame.game()));
                             break;
 
                         case "BLACK":
-                            data.updateGame(new GameData(existingGame.gameID(), existingGame.whiteUsername(), existingAuth.username(), existingGame.gameName(), existingGame.game()));
+                            data.updateGame(new GameData(existingGame.gameID(),
+                                    existingGame.whiteUsername(),
+                                    existingAuth.username(),
+                                    existingGame.gameName(),
+                                    existingGame.game()));
                             break;
 
                         default:
