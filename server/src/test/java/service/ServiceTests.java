@@ -19,9 +19,12 @@ public class ServiceTests {
 
     @Test
     public void clearPositive() throws DataAccessException {
-        UserData user = new UserData("asdf", "asdf", "asdf@gmail.com");
         dataAccess.createUser(new UserData("asdf", "asdf", "asdf@gmail.com"));
         dataAccess.clear();
         assertNull(dataAccess.getUser("asdf"));
     }
+
+    @Test
+    public void
+
 }
