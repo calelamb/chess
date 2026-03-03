@@ -25,6 +25,11 @@ public class ServiceTests {
     }
 
     @Test
-    public void
+    public void createNewUserPositive() throws DataAccessException, BadRequestException, AlreadyTakenException {
+        UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
+        AuthData testAuth = new RegisterService(dataAccess).createNewUser(userData);
+        assertNotNull(testAuth);
+        assertEquals("asdf", testAuth.username());
+    }
 
 }
