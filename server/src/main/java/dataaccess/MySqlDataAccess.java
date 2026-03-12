@@ -5,14 +5,17 @@ import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 
+/**
+ * MySqlDataAccess class that implements the DataAccess interface using a MySQL database.
+ * Stores and retrieves User, Game, and Auth data persistently.
+ */
 public class MySqlDataAccess implements DataAccess {
     public MySqlDataAccess() throws DataAccessException {
         DatabaseManager.createDatabase();
