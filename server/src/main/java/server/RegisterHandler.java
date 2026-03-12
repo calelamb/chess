@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.DataAccessException;
 import io.javalin.http.Context;
 import model.AuthData;
 import model.UserData;
@@ -38,6 +39,9 @@ public class RegisterHandler extends Handler {
         } catch (AlreadyTakenException e) {
             ctx.status(403);
             ctx.result(serialize(new ErrorMessage("Error: already taken")));
+        } catch (DataAccessException e) {
+            ctx.status(500);
+            ctx.result(serialize(new ErrorMessage("Error: " + e.getMessage())));
         }
     }
 }

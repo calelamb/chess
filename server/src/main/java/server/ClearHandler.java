@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.DataAccessException;
 import io.javalin.http.Context;
 import service.ClearService;
 
@@ -21,8 +22,13 @@ public class ClearHandler extends Handler {
      * @throws Exception thrown if there was an error clearing the data
      */
     public void handle(Context ctx) throws Exception {
-        c.clear();
-        ctx.status(200);
-        ctx.result("{}");
+        try {
+            c.clear();
+            ctx.status(200);
+            ctx.result("{}");
+        } catch (DataAccessException e) {
+            ctx.status(500);
+            ctx.result(serialize(new ErrorMessage("Error: " + e.getMessage())));
+        }
     }
 }

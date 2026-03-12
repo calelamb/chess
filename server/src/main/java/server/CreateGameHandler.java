@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.DataAccessException;
 import io.javalin.http.Context;
 import service.BadRequestException;
 import service.CreateGameService;
@@ -42,6 +43,9 @@ public class CreateGameHandler extends Handler {
         } catch (BadRequestException e) {
             ctx.status(400);
             ctx.result(serialize(new ErrorMessage("Error: bad request")));
+        } catch (DataAccessException e) {
+            ctx.status(500);
+            ctx.result(serialize(new ErrorMessage("Error: " + e.getMessage())));
         }
     }
 }

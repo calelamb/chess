@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.DataAccessException;
 import io.javalin.http.Context;
 import service.LogoutService;
 import service.UnauthorizedException;
@@ -30,6 +31,9 @@ public class LogoutHandler extends Handler {
         } catch (UnauthorizedException e) {
             ctx.status(401);
             ctx.result(serialize(new ErrorMessage("Error: unauthorized")));
+        } catch (DataAccessException e) {
+            ctx.status(500);
+            ctx.result(serialize(new ErrorMessage("Error: " + e.getMessage())));
         }
     }
 }

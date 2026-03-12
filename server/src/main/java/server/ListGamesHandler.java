@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.DataAccessException;
 import io.javalin.http.Context;
 import model.GameData;
 import service.ListGamesService;
@@ -38,6 +39,9 @@ public class ListGamesHandler extends Handler {
         } catch (UnauthorizedException e) {
             ctx.status(401);
             ctx.result(serialize(new ErrorMessage("Error: unauthorized")));
+        } catch (DataAccessException e) {
+            ctx.status(500);
+            ctx.result(serialize(new ErrorMessage("Error: " + e.getMessage())));
         }
     }
 }
