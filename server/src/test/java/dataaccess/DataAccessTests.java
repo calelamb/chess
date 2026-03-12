@@ -42,4 +42,20 @@ public class DataAccessTests {
     void getUserNegative() throws Exception {
         assertNull(dao.getUser("should be null"));
     }
+
+    @Test
+    void createAuthPositive() throws Exception {
+        dao.createAuth(new AuthData("cale", "token123"));
+        assertNotNull(dao.getAuth("token123"));
+    }
+
+    @Test
+    void createAuthNegative() throws Exception {
+        dao.createAuth(new AuthData("cale", "token123"));
+        assertThrows(DataAccessException.class, () ->
+                dao.createAuth(new AuthData("cale", "token123")));
+    }
+
+    @Test
+
 }
