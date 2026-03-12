@@ -1,6 +1,9 @@
 package server;
 
+import dataaccess.DataAccess;
+import dataaccess.DataAccessException;
 import dataaccess.MemoryDataAccess;
+import dataaccess.MySqlDataAccess;
 import io.javalin.*;
 import service.*;
 
@@ -12,7 +15,12 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
-        var dataAccess = new MemoryDataAccess();
+        DataAccess dataAccess;
+        try {
+            dataAccess = new MySqlDataAccess();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         var clearHandler = new ClearHandler(new ClearService(dataAccess));
         var registerHandler = new RegisterHandler(new RegisterService(dataAccess));
         var loginHandler = new LoginHandler(new LoginService(dataAccess));
