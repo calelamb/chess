@@ -4,6 +4,7 @@ import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.UUID;
 
@@ -35,8 +36,7 @@ public class LoginService {
             String username = d.username();
             UserData existingUser = data.getUser(username);
             if (existingUser != null) {
-                if (d.password().equals(existingUser.password())) {
-
+                if (BCrypt.checkpw(d.password(), existingUser.password())) {
                     String token = UUID.randomUUID().toString();
                     AuthData authData = new AuthData(d.username(), token);
                     data.createAuth(authData);
