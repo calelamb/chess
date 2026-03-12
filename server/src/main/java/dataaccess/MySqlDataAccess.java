@@ -7,6 +7,8 @@ import model.UserData;
 import java.sql.*;
 import java.util.Collection;
 import java.util.List;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 public class MySqlDataAccess implements DataAccess {
     public MySqlDataAccess() throws DataAccessException {
@@ -14,7 +16,7 @@ public class MySqlDataAccess implements DataAccess {
         configureDatabase();
     }
 
-    private void configureDatabase() throws DataAccessException{
+    private void configureDatabase() throws DataAccessException {
         String[] statements = {
                 """
             CREATE TABLE IF NOT EXISTS users (
@@ -55,12 +57,25 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
+        String sql = "SELECT username, password, email FROM users WHERE username = ?";
+        try (var conn = DatabaseManager.getConnection();
+             var ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (var rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new UserData(rs.getString("username"), rs.getString("password"), rs.getString("email"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error getting user: " + e.getMessage());
+        }
         return null;
     }
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-
+        String sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        String hashed = BCrypt.hashpw(user.password(), BCrypt.gensalt());
     }
 
     @Override
