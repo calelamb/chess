@@ -14,4 +14,24 @@ public class ServerFacade {
     public void registerUser () {
 
     }
+
+    public void loginUser() {
+
+    }
+
+    public void logoutUser() {
+
+    }
+
+    public void listGames() {
+
+    }
+
+    public void createGame() {
+
+    }
+
+    public void joinGame() {
+
+    }
 }
