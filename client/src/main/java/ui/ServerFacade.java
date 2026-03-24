@@ -1,6 +1,11 @@
 package ui;
 
+import model.AuthData;
+import model.GameData;
+import model.UserData;
+
 import java.net.http.HttpClient;
+import java.util.List;
 
 public class ServerFacade {
 
@@ -11,27 +16,27 @@ public class ServerFacade {
         this.serverUrl = serverUrl;
     }
 
-    public void registerUser () {
+    public AuthData registerUser(String username, String password, String email) {
+        UserData ud = new UserData(username, password, email);
+    }
+
+    public AuthData loginUser(String username) {
 
     }
 
-    public void loginUser() {
+    public void logoutUser(int authToken) {
 
     }
 
-    public void logoutUser() {
+    public List<GameData> listGames(int authToken) {
 
     }
 
-    public void listGames() {
+    public GameData createGame(int authToken) {
 
     }
 
-    public void createGame() {
-
-    }
-
-    public void joinGame() {
+    public void joinGame(int authToken, int gameID, String teamColor) {
 
     }
 }
