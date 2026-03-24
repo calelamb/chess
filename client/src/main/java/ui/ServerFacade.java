@@ -20,23 +20,23 @@ public class ServerFacade {
         UserData ud = new UserData(username, password, email);
     }
 
-    public AuthData loginUser(String username) {
+    public AuthData loginUser(String username, String password) {
 
     }
 
-    public void logoutUser(int authToken) {
+    public void logoutUser(String authToken) {
 
     }
 
-    public List<GameData> listGames(int authToken) {
+    public List<GameData> listGames(String authToken) {
 
     }
 
-    public GameData createGame(int authToken) {
+    public GameData createGame(String authToken, String gameName) {
 
     }
 
-    public void joinGame(int authToken, int gameID, String teamColor) {
+    public void joinGame(String authToken, int gameID, String teamColor) {
 
     }
 }
