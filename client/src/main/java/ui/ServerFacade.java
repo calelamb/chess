@@ -32,7 +32,7 @@ public class ServerFacade {
 
     }
 
-    public GameData createGame(String authToken, String gameName) {
+    public int createGame(String authToken, String gameName) {
 
     }
 
