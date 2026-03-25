@@ -65,6 +65,11 @@ public class ServerFacade {
                 break;
 
             default:
+                if (responseClass != null) {
+                    return GSON.fromJson(jsonBody, responseClass);
+                } else {
+                    return null;
+                }
 
         }
 
