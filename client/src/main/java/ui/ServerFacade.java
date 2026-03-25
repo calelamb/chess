@@ -50,19 +50,18 @@ public class ServerFacade {
         switch (status) {
             case 400:
                 throw new BadRequestException("Bad request");
-                break;
 
             case 401:
                 throw new UnauthorizedException("Unauthorized");
-                break;
+
 
             case 403:
                 throw new AlreadyTakenException("Already taken");
-                break;
+
 
             case 500:
                 throw new DataAccessException("Error accessing the database");
-                break;
+
 
             default:
                 if (responseClass != null) {
