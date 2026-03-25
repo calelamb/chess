@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.DataAccess;
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import model.AuthData;
 
 /**
@@ -21,14 +21,14 @@ public class LogoutService {
      *
      * @param authToken Unique authentication token used to verify the user's session
      * @throws DataAccessException   thrown if there is an error fetching the auth token
-     * @throws UnauthorizedException thrown if auth token given cannot be verified in the data store.
+     * @throws exception.UnauthorizedException thrown if auth token given cannot be verified in the data store.
      */
-    public void endSession(String authToken) throws DataAccessException, UnauthorizedException {
+    public void endSession(String authToken) throws DataAccessException, exception.UnauthorizedException {
         AuthData token = data.getAuth(authToken);
         if (token != null) {
             data.deleteAuth(authToken);
         } else {
-            throw new UnauthorizedException("Auth token could not be verified");
+            throw new exception.UnauthorizedException("Auth token could not be verified");
         }
     }
 }

@@ -21,12 +21,12 @@ public class MemoryDataAccess implements DataAccess {
     private int uniqueID = 1;
 
     @Override
-    public UserData getUser(String username) throws DataAccessException {
+    public UserData getUser(String username) throws exception.DataAccessException {
         return users.get(username);
     }
 
     @Override
-    public void createUser(UserData user) throws DataAccessException {
+    public void createUser(UserData user) throws exception.DataAccessException {
         String hashed = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         users.put(user.username(), new UserData(user.username(), hashed, user.email()));
 
@@ -34,45 +34,45 @@ public class MemoryDataAccess implements DataAccess {
     }
 
     @Override
-    public void createAuth(AuthData auth) throws DataAccessException {
+    public void createAuth(AuthData auth) throws exception.DataAccessException {
         authMap.put(auth.authToken(), auth);
 
     }
 
     @Override
-    public AuthData getAuth(String authToken) throws DataAccessException {
+    public AuthData getAuth(String authToken) throws exception.DataAccessException {
         return authMap.get(authToken);
     }
 
     @Override
-    public void deleteAuth(String authToken) throws DataAccessException {
+    public void deleteAuth(String authToken) throws exception.DataAccessException {
         authMap.remove(authToken);
     }
 
     @Override
-    public Collection<GameData> getGames() throws DataAccessException {
+    public Collection<GameData> getGames() throws exception.DataAccessException {
         return games.values();
     }
 
     @Override
-    public int createGame(GameData gData) throws DataAccessException {
+    public int createGame(GameData gData) throws exception.DataAccessException {
         games.put(uniqueID, new GameData(uniqueID, gData.whiteUsername(), gData.blackUsername(), gData.gameName(), gData.game()));
         return uniqueID++;
     }
 
     @Override
-    public GameData getGame(int gID) throws DataAccessException {
+    public GameData getGame(int gID) throws exception.DataAccessException {
         return games.get(gID);
     }
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public void updateGame(GameData game) throws exception.DataAccessException {
         games.put(game.gameID(), game);
 
     }
 
     @Override
-    public void clear() throws DataAccessException {
+    public void clear() throws exception.DataAccessException {
         games.clear();
         authMap.clear();
         users.clear();

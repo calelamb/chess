@@ -1,10 +1,10 @@
 package server;
 
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import io.javalin.http.Context;
 import model.GameData;
 import service.ListGamesService;
-import service.UnauthorizedException;
+import exception.UnauthorizedException;
 
 import java.util.Collection;
 

@@ -1,9 +1,9 @@
 package server;
 
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import io.javalin.http.Context;
 import service.LogoutService;
-import service.UnauthorizedException;
+import exception.UnauthorizedException;
 
 /**
  * Handles the HTTP DELETE request for the /session endpoint. Logs the user out by deleting the authorization data.

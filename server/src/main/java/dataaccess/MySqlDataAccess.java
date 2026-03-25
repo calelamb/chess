@@ -17,12 +17,12 @@ import java.util.Collection;
  * Stores and retrieves User, Game, and Auth data persistently.
  */
 public class MySqlDataAccess implements DataAccess {
-    public MySqlDataAccess() throws DataAccessException {
+    public MySqlDataAccess() throws exception.DataAccessException {
         DatabaseManager.createDatabase();
         configureDatabase();
     }
 
-    private void configureDatabase() throws DataAccessException {
+    private void configureDatabase() throws exception.DataAccessException {
         String[] statements = {
                 """
             CREATE TABLE IF NOT EXISTS users (
@@ -57,12 +57,12 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Failed to configure database: " + e.getMessage());
+            throw new exception.DataAccessException("Failed to configure database: " + e.getMessage());
         }
     }
 
     @Override
-    public UserData getUser(String username) throws DataAccessException {
+    public UserData getUser(String username) throws exception.DataAccessException {
         String sql = "SELECT username, password, email FROM users WHERE username = ?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
@@ -73,13 +73,13 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Error getting user: " + e.getMessage());
+            throw new exception.DataAccessException("Error getting user: " + e.getMessage());
         }
         return null;
     }
 
     @Override
-    public void createUser(UserData user) throws DataAccessException {
+    public void createUser(UserData user) throws exception.DataAccessException {
         String sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         String hashed = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         try (var conn = DatabaseManager.getConnection();
@@ -89,12 +89,12 @@ public class MySqlDataAccess implements DataAccess {
             ps.setString(3, user.email());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("Error creating user: " + e.getMessage());
+            throw new exception.DataAccessException("Error creating user: " + e.getMessage());
         }
     }
 
     @Override
-    public void createAuth(AuthData auth) throws DataAccessException {
+    public void createAuth(AuthData auth) throws exception.DataAccessException {
         String sql = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
@@ -102,12 +102,12 @@ public class MySqlDataAccess implements DataAccess {
             ps.setString(2, auth.username());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("Error creating auth: " + e.getMessage());
+            throw new exception.DataAccessException("Error creating auth: " + e.getMessage());
         }
     }
 
     @Override
-    public AuthData getAuth(String authToken) throws DataAccessException {
+    public AuthData getAuth(String authToken) throws exception.DataAccessException {
         String sql = "SELECT authToken, username FROM auth WHERE authToken = ?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
@@ -118,26 +118,26 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Error getting auth: " + e.getMessage());
+            throw new exception.DataAccessException("Error getting auth: " + e.getMessage());
         }
         return null;
     }
 
 
     @Override
-    public void deleteAuth(String authToken) throws DataAccessException {
+    public void deleteAuth(String authToken) throws exception.DataAccessException {
         String sql = "DELETE FROM auth WHERE authToken = ?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
             ps.setString(1, authToken);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("Error deleting auth: " + e.getMessage());
+            throw new exception.DataAccessException("Error deleting auth: " + e.getMessage());
         }
     }
 
     @Override
-    public Collection<GameData> getGames() throws DataAccessException {
+    public Collection<GameData> getGames() throws exception.DataAccessException {
         var games = new ArrayList<GameData>();
         String sql = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games";
         try (var conn = DatabaseManager.getConnection();
@@ -149,14 +149,14 @@ public class MySqlDataAccess implements DataAccess {
                         rs.getString("blackUsername"), rs.getString("gameName"), game));
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Error getting games: " + e.getMessage());
+            throw new exception.DataAccessException("Error getting games: " + e.getMessage());
         }
         return games;
     }
 
 
     @Override
-    public int createGame(GameData gData) throws DataAccessException {
+    public int createGame(GameData gData) throws exception.DataAccessException {
         String sql = "INSERT INTO games (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
         String gameJson = new Gson().toJson(gData.game());
         try (var conn = DatabaseManager.getConnection();
@@ -170,13 +170,13 @@ public class MySqlDataAccess implements DataAccess {
             keys.next();
             return keys.getInt(1);
         } catch (SQLException e) {
-            throw new DataAccessException("Error creating game: " + e.getMessage());
+            throw new exception.DataAccessException("Error creating game: " + e.getMessage());
         }
     }
 
 
     @Override
-    public GameData getGame(int gID) throws DataAccessException {
+    public GameData getGame(int gID) throws exception.DataAccessException {
         String sql = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID = ?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
@@ -189,13 +189,13 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Error getting game: " + e.getMessage());
+            throw new exception.DataAccessException("Error getting game: " + e.getMessage());
         }
         return null;
     }
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public void updateGame(GameData game) throws exception.DataAccessException {
         String sql = "UPDATE games SET whiteUsername = ?, blackUsername = ?, game = ? WHERE gameID = ?";
         String gameJson = new Gson().toJson(game.game());
         try (var conn = DatabaseManager.getConnection();
@@ -206,12 +206,12 @@ public class MySqlDataAccess implements DataAccess {
             ps.setInt(4, game.gameID());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("Error updating game: " + e.getMessage());
+            throw new exception.DataAccessException("Error updating game: " + e.getMessage());
         }
     }
 
     @Override
-    public void clear() throws DataAccessException {
+    public void clear() throws exception.DataAccessException {
         String[] statements = {"DELETE FROM auth", "DELETE FROM games", "DELETE FROM users"};
         try (var conn = DatabaseManager.getConnection()) {
             for (String sql : statements) {
@@ -220,7 +220,7 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Error clearing database: " + e.getMessage());
+            throw new exception.DataAccessException("Error clearing database: " + e.getMessage());
         }
     }
 }

@@ -1,6 +1,5 @@
 package dataaccess;
 
-import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -18,82 +17,82 @@ public interface DataAccess {
      *
      * @param username the username to search for
      * @return the UserData object if found, null if not
-     * @throws DataAccessException thrown if there's an error accessing the data
+     * @throws exception.DataAccessException thrown if there's an error accessing the data
      */
-    UserData getUser(String username) throws DataAccessException;
+    UserData getUser(String username) throws exception.DataAccessException;
 
     /**
      * Stores a UserData object based on user data
      *
      * @param user UserData used to createUser
-     * @throws DataAccessException thrown if user cannot be created
+     * @throws exception.DataAccessException thrown if user cannot be created
      */
-    void createUser(UserData user) throws DataAccessException;
+    void createUser(UserData user) throws exception.DataAccessException;
 
     /**
      * Creates a AuthData object with data from the auth param
      *
      * @param auth AuthData used to createAuth
-     * @throws DataAccessException thrown if there's an error creating the auth
+     * @throws exception.DataAccessException thrown if there's an error creating the auth
      */
-    void createAuth(AuthData auth) throws DataAccessException;
+    void createAuth(AuthData auth) throws exception.DataAccessException;
 
     /**
      * Returns an AuthData object, found by the authToken
      *
      * @param authToken a unique session token
      * @return an AuthData object
-     * @throws DataAccessException thrown if there's an issue accessing the data
+     * @throws exception.DataAccessException thrown if there's an issue accessing the data
      */
-    AuthData getAuth(String authToken) throws DataAccessException;
+    AuthData getAuth(String authToken) throws exception.DataAccessException;
 
     /**
      * Deletes an AuthData object
      *
      * @param authToken a unique session token
-     * @throws DataAccessException thrown if there's an issue deleting the object
+     * @throws exception.DataAccessException thrown if there's an issue deleting the object
      */
-    void deleteAuth(String authToken) throws DataAccessException;
+    void deleteAuth(String authToken) throws exception.DataAccessException;
 
     /**
      * Returns a Collection of all active chess games
      *
      * @return a Collection of games
-     * @throws DataAccessException thrown if there's an issue retrieving games
+     * @throws exception.DataAccessException thrown if there's an issue retrieving games
      */
-    Collection<GameData> getGames() throws DataAccessException;
+    Collection<GameData> getGames() throws exception.DataAccessException;
 
     /**
      * Creates a new Chess game with unique game data
      *
      * @param gData GameData record containing the unique data for the game
      * @return the GameID
-     * @throws DataAccessException thrown if there's an error creating the game
+     * @throws exception.DataAccessException thrown if there's an error creating the game
      */
-    int createGame(GameData gData) throws DataAccessException;
+    int createGame(GameData gData) throws exception.DataAccessException;
 
     /**
      * Retrieve a specified game with the given game ID.
      *
      * @param gID the game ID to search for
      * @return the specified game data
-     * @throws DataAccessException thrown if there is an issue retrieving gameID
+     * @throws exception.DataAccessException thrown if there is an issue retrieving gameID
      */
-    GameData getGame(int gID) throws DataAccessException;
+    GameData getGame(int gID) throws exception.DataAccessException;
 
     /**
      * Replaces an existing game with updated game data
      *
      * @param game the existing GameData object
-     * @throws DataAccessException thrown if there is an error updating game data
+     * @throws exception.DataAccessException thrown if there is an error updating game data
      */
-    void updateGame(GameData game) throws DataAccessException;
+    void updateGame(GameData game) throws exception.DataAccessException;
 
     /**
      * Full reset of a game, clears AuthData, GameData, and UserData
      *
-     * @throws DataAccessException thrown if there is an error clearing from data
+     * @throws exception.DataAccessException thrown if there is an error clearing from data
      */
-    void clear() throws DataAccessException;
+    void clear() throws exception.DataAccessException;
 
 }

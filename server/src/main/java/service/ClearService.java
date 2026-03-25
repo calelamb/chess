@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.DataAccess;
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 
 /**
  * ClearService class for the Clear endpoint.

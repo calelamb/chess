@@ -1,11 +1,11 @@
 package server;
 
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import io.javalin.http.Context;
 import model.AuthData;
 import model.UserData;
-import service.AlreadyTakenException;
-import service.BadRequestException;
+import exception.AlreadyTakenException;
+import exception.BadRequestException;
 import service.RegisterService;
 
 /**

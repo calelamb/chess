@@ -27,7 +27,7 @@ public class DataAccessTests {
     @Test
     void createUserNegative() throws Exception {
         dao.createUser(new UserData("cale", "password", "cale@gmail.com"));
-        assertThrows(DataAccessException.class, () ->
+        assertThrows(exception.DataAccessException.class, () ->
                 dao.createUser(new UserData("cale", "password", "cale@gmail.com")));
     }
 
@@ -52,7 +52,7 @@ public class DataAccessTests {
     @Test
     void createAuthNegative() throws Exception {
         dao.createAuth(new AuthData("cale", "token123"));
-        assertThrows(DataAccessException.class, () ->
+        assertThrows(exception.DataAccessException.class, () ->
                 dao.createAuth(new AuthData("cale", "token123")));
     }
 
@@ -88,7 +88,7 @@ public class DataAccessTests {
 
     @Test
     void createGameNegative() throws Exception {
-        assertThrows(DataAccessException.class, () ->
+        assertThrows(exception.DataAccessException.class, () ->
                 dao.createGame(new GameData(0, null, null, null, new ChessGame())));
     }
 

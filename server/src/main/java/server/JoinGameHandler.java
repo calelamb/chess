@@ -1,12 +1,12 @@
 package server;
 
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import io.javalin.http.Context;
 
-import service.AlreadyTakenException;
-import service.BadRequestException;
+import exception.AlreadyTakenException;
+import exception.BadRequestException;
 import service.JoinGameService;
-import service.UnauthorizedException;
+import exception.UnauthorizedException;
 
 /**
  * Handles the HTTP PUT request for the /game endpoint, joining an existing chess game

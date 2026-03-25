@@ -1,4 +1,4 @@
-package service;
+package exception;
 
 /**
  * Exception class indicating a username was already taken

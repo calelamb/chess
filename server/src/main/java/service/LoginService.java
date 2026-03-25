@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.DataAccess;
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
@@ -26,12 +26,12 @@ public class LoginService {
      *
      * @param d a UserData object
      * @return a unique session ID generated after login
-     * @throws UnauthorizedException thrown if there is an error matching username, or password to username
+     * @throws exception.UnauthorizedException thrown if there is an error matching username, or password to username
      * @throws DataAccessException   thrown if there is an error accessing the UserData
      */
-    public AuthData loginUser(UserData d) throws UnauthorizedException, DataAccessException, BadRequestException {
+    public AuthData loginUser(UserData d) throws exception.UnauthorizedException, DataAccessException, exception.BadRequestException {
         if (d.username() == null || d.password() == null || d.username().isEmpty() || d.password().isEmpty()) {
-            throw new BadRequestException("Missing required fields");
+            throw new exception.BadRequestException("Missing required fields");
         } else {
             String username = d.username();
             UserData existingUser = data.getUser(username);
@@ -43,10 +43,10 @@ public class LoginService {
 
                     return authData;
                 } else {
-                    throw new UnauthorizedException("Incorrect password");
+                    throw new exception.UnauthorizedException("Incorrect password");
                 }
             } else {
-                throw new UnauthorizedException("No user found with that username");
+                throw new exception.UnauthorizedException("No user found with that username");
             }
         }
     }

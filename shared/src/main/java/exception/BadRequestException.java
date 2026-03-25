@@ -1,4 +1,4 @@
-package service;
+package exception;
 
 /**
  * Exception thrown when a request is missing required fields or contains invalid data.

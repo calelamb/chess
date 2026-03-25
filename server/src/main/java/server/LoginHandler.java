@@ -1,12 +1,12 @@
 package server;
 
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import io.javalin.http.Context;
 import model.AuthData;
 import model.UserData;
-import service.BadRequestException;
+import exception.BadRequestException;
 import service.LoginService;
-import service.UnauthorizedException;
+import exception.UnauthorizedException;
 
 /**
  * Handles the HTTP POST request for the endpoint, logging the user in with a validated authorization token.

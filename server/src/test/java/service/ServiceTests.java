@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import dataaccess.MemoryDataAccess;
 import model.*;
 import org.junit.jupiter.api.*;
@@ -27,7 +27,7 @@ public class ServiceTests {
     }
 
     @Test
-    public void createNewUserPositive() throws DataAccessException, BadRequestException, AlreadyTakenException {
+    public void createNewUserPositive() throws DataAccessException, exception.BadRequestException, exception.AlreadyTakenException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         AuthData testAuth = new RegisterService(dataAccess).createNewUser(userData);
         assertNotNull(testAuth);
@@ -35,15 +35,15 @@ public class ServiceTests {
     }
 
     @Test
-    public void createNewUserNegative() throws DataAccessException, BadRequestException, AlreadyTakenException {
+    public void createNewUserNegative() throws DataAccessException, exception.BadRequestException, exception.AlreadyTakenException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
-        assertThrows(AlreadyTakenException.class, () ->
+        assertThrows(exception.AlreadyTakenException.class, () ->
                 new RegisterService(dataAccess).createNewUser(userData));
     }
 
     @Test
-    public void loginUserPositive() throws DataAccessException, UnauthorizedException, BadRequestException, AlreadyTakenException {
+    public void loginUserPositive() throws DataAccessException, exception.UnauthorizedException, exception.BadRequestException, exception.AlreadyTakenException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
         AuthData result = new LoginService(dataAccess).loginUser(userData);
@@ -52,16 +52,16 @@ public class ServiceTests {
     }
 
     @Test
-    public void loginUserNegative() throws DataAccessException, BadRequestException, AlreadyTakenException {
+    public void loginUserNegative() throws DataAccessException, exception.BadRequestException, exception.AlreadyTakenException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         UserData wrongPassword = new UserData("asdf", "wrongpassword", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
-        assertThrows(UnauthorizedException.class, () ->
+        assertThrows(exception.UnauthorizedException.class, () ->
                 new LoginService(dataAccess).loginUser(wrongPassword));
     }
 
     @Test
-    public void endSessionPositive() throws DataAccessException, BadRequestException, AlreadyTakenException, UnauthorizedException {
+    public void endSessionPositive() throws DataAccessException, exception.BadRequestException, exception.AlreadyTakenException, exception.UnauthorizedException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
         AuthData result = new LoginService(dataAccess).loginUser(userData);
@@ -70,17 +70,17 @@ public class ServiceTests {
     }
 
     @Test
-    public void endSessionNegative() throws DataAccessException, BadRequestException, AlreadyTakenException, UnauthorizedException {
+    public void endSessionNegative() throws DataAccessException, exception.BadRequestException, exception.AlreadyTakenException, exception.UnauthorizedException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
         AuthData result = new LoginService(dataAccess).loginUser(userData);
         new LogoutService(dataAccess).endSession(result.authToken());
-        assertThrows(UnauthorizedException.class, () ->
+        assertThrows(exception.UnauthorizedException.class, () ->
                 new LogoutService(dataAccess).endSession("fakeToken"));
     }
 
     @Test
-    public void listGamesPositive() throws DataAccessException, BadRequestException, AlreadyTakenException, UnauthorizedException {
+    public void listGamesPositive() throws DataAccessException, exception.BadRequestException, exception.AlreadyTakenException, exception.UnauthorizedException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
         AuthData result = new LoginService(dataAccess).loginUser(userData);
@@ -92,19 +92,19 @@ public class ServiceTests {
     }
 
     @Test
-    public void listGamesNegative() throws DataAccessException, BadRequestException, AlreadyTakenException, UnauthorizedException {
+    public void listGamesNegative() throws DataAccessException, exception.BadRequestException, exception.AlreadyTakenException, exception.UnauthorizedException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
         AuthData result = new LoginService(dataAccess).loginUser(userData);
         new CreateGameService(dataAccess).newGame(result.authToken(), "game1");
         new CreateGameService(dataAccess).newGame(result.authToken(), "game2");
-        assertThrows(UnauthorizedException.class, () ->
+        assertThrows(exception.UnauthorizedException.class, () ->
                 new ListGamesService(dataAccess).listGames("fakeToken"));
     }
 
 
     @Test
-    public void newGamePositive() throws DataAccessException, BadRequestException, AlreadyTakenException, UnauthorizedException {
+    public void newGamePositive() throws DataAccessException, exception.BadRequestException, exception.AlreadyTakenException, exception.UnauthorizedException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
         AuthData result = new LoginService(dataAccess).loginUser(userData);
@@ -113,16 +113,16 @@ public class ServiceTests {
     }
 
     @Test
-    public void newGameNegative() throws DataAccessException, BadRequestException, AlreadyTakenException, UnauthorizedException {
+    public void newGameNegative() throws DataAccessException, exception.BadRequestException, exception.AlreadyTakenException, exception.UnauthorizedException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
         AuthData result = new LoginService(dataAccess).loginUser(userData);
-        assertThrows(UnauthorizedException.class, () ->
+        assertThrows(exception.UnauthorizedException.class, () ->
                 new CreateGameService(dataAccess).newGame("fakeToken", "testGame"));
     }
 
     @Test
-    public void joinGamePositive() throws DataAccessException, UnauthorizedException, BadRequestException, AlreadyTakenException {
+    public void joinGamePositive() throws DataAccessException, exception.UnauthorizedException, exception.BadRequestException, exception.AlreadyTakenException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
         AuthData result = new LoginService(dataAccess).loginUser(userData);
@@ -132,12 +132,12 @@ public class ServiceTests {
     }
 
     @Test
-    public void joinGameNegative() throws DataAccessException, UnauthorizedException, BadRequestException, AlreadyTakenException {
+    public void joinGameNegative() throws DataAccessException, exception.UnauthorizedException, exception.BadRequestException, exception.AlreadyTakenException {
         UserData userData = new UserData("asdf", "asdf", "asdf@gmail.com");
         new RegisterService(dataAccess).createNewUser(userData);
         AuthData result = new LoginService(dataAccess).loginUser(userData);
         int gameID = new CreateGameService(dataAccess).newGame(result.authToken(), "testGame");
-        assertThrows(UnauthorizedException.class, () ->
+        assertThrows(exception.UnauthorizedException.class, () ->
                 new JoinGameService(dataAccess).joinGame("fakeToken", "WHITE", gameID));
     }
 }

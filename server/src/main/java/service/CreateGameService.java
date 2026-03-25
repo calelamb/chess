@@ -2,7 +2,7 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.DataAccess;
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import model.AuthData;
 import model.GameData;
 
@@ -23,18 +23,18 @@ public class CreateGameService {
      * @param authToken unique authentication token used to verify the user's session
      * @param gameName  name of the newly created game
      * @return the gameID of the newly created game
-     * @throws UnauthorizedException thrown if there's an error verifying the auth token
+     * @throws exception.UnauthorizedException thrown if there's an error verifying the auth token
      * @throws DataAccessException   thrown if there's an error accessing the game data
      */
-    public int newGame(String authToken, String gameName) throws UnauthorizedException, DataAccessException, BadRequestException {
+    public int newGame(String authToken, String gameName) throws exception.UnauthorizedException, DataAccessException, exception.BadRequestException {
         if (gameName == null || gameName.isEmpty()) {
-            throw new BadRequestException("Missing game name");
+            throw new exception.BadRequestException("Missing game name");
         } else {
             AuthData existingAuth = data.getAuth(authToken);
             if (existingAuth != null) {
                 return data.createGame(new GameData(0, null, null, gameName, new ChessGame()));
             } else {
-                throw new UnauthorizedException("Auth token could not be verified");
+                throw new exception.UnauthorizedException("Auth token could not be verified");
             }
         }
     }

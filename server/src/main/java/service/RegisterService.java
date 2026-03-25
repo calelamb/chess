@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.DataAccess;
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import model.AuthData;
 import model.UserData;
 
@@ -23,18 +23,18 @@ public class RegisterService {
      *
      * @param d UserData object used to create new user
      * @return AuthData (unique identifier and session token) of created user
-     * @throws BadRequestException   thrown if bad or missing data is passed
-     * @throws AlreadyTakenException thrown if desired username is already found in the database
+     * @throws exception.BadRequestException   thrown if bad or missing data is passed
+     * @throws exception.AlreadyTakenException thrown if desired username is already found in the database
      * @throws DataAccessException   thrown if there is an error creating the user
      */
-    public AuthData createNewUser(UserData d) throws BadRequestException, AlreadyTakenException, DataAccessException {
+    public AuthData createNewUser(UserData d) throws exception.BadRequestException, exception.AlreadyTakenException, DataAccessException {
         if (d.username() == null || d.password() == null || d.email() == null) {
-            throw new BadRequestException("One of more fields is empty");
+            throw new exception.BadRequestException("One of more fields is empty");
         } else if (d.username().isEmpty() || d.password().isEmpty() || d.email().isEmpty()) {
-            throw new BadRequestException("One or more fields has empty space");
+            throw new exception.BadRequestException("One or more fields has empty space");
         }
         if (data.getUser(d.username()) != null) {
-            throw new AlreadyTakenException("Username already taken");
+            throw new exception.AlreadyTakenException("Username already taken");
         }
 
         data.createUser(d);

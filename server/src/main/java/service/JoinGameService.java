@@ -1,12 +1,13 @@
 package service;
 
 import dataaccess.DataAccess;
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import model.AuthData;
 import model.GameData;
 
 /**
- * Handles a user joining an existing chess game by verifying their auth token, validating the game and color availability, and updating the game with the new player.
+ * Handles a user joining an existing chess game by verifying their auth token,
+ * validating the game and color availability, and updating the game with the new player.
  */
 public class JoinGameService {
 
@@ -23,23 +24,24 @@ public class JoinGameService {
      * @param playerColor the player color to join as, either WHITE or BLACK
      * @param gameID      the unique identifier of the game to join
      * @throws DataAccessException   thrown if there is an error accessing the data from memory
-     * @throws UnauthorizedException thrown if the authorization token could not be retrieved/verified
-     * @throws AlreadyTakenException thrown if the desired player color is already taken by another user
-     * @throws BadRequestException   thrown if the gameID doesn't exist
+     * @throws exception.UnauthorizedException thrown if the authorization token could not be retrieved/verified
+     * @throws exception.AlreadyTakenException thrown if the desired player color is already taken by another user
+     * @throws exception.BadRequestException   thrown if the gameID doesn't exist
      */
-    public void joinGame(String authToken, String playerColor, int gameID) throws DataAccessException, UnauthorizedException, AlreadyTakenException, BadRequestException {
+    public void joinGame(String authToken, String playerColor, int gameID)
+            throws DataAccessException, exception.UnauthorizedException, exception.AlreadyTakenException, exception.BadRequestException {
         if (playerColor == null) {
-            throw new BadRequestException("Missing player color");
+            throw new exception.BadRequestException("Missing player color");
         } else {
             AuthData existingAuth = data.getAuth(authToken);
             GameData existingGame = data.getGame(gameID);
             if (existingAuth != null) {
                 if (existingGame != null) {
                     if (playerColor.equalsIgnoreCase("WHITE") && existingGame.whiteUsername() != null) {
-                        throw new AlreadyTakenException("Player color already taken");
+                        throw new exception.AlreadyTakenException("Player color already taken");
                     }
                     if (playerColor.equalsIgnoreCase("BLACK") && existingGame.blackUsername() != null) {
-                        throw new AlreadyTakenException("Player color already taken");
+                        throw new exception.AlreadyTakenException("Player color already taken");
                     }
 
                     switch (playerColor) {
@@ -60,14 +62,14 @@ public class JoinGameService {
                             break;
 
                         default:
-                            throw new BadRequestException("Invalid player color");
+                            throw new exception.BadRequestException("Invalid player color");
 
                     }
                 } else {
-                    throw new BadRequestException("Invalid GameID");
+                    throw new exception.BadRequestException("Invalid GameID");
                 }
             } else {
-                throw new UnauthorizedException("Auth token could not be verified");
+                throw new exception.UnauthorizedException("Auth token could not be verified");
             }
 
         }

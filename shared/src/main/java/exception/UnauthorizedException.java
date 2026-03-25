@@ -1,4 +1,4 @@
-package service;
+package exception;
 
 /**
  * Exception thrown when a request contains invalid or missing auth token
