@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServerFacade {
@@ -65,7 +66,7 @@ public class ServerFacade {
 
             default:
                 if (responseClass != null) {
-                    return GSON.fromJson(jsonBody, responseClass);
+                    return GSON.fromJson(response.body(), responseClass);
                 } else {
                     return null;
                 }
@@ -76,11 +77,14 @@ public class ServerFacade {
 
     public AuthData registerUser(String username, String password, String email) {
         UserData ud = new UserData(username, password, email);
+
+        return new AuthData(username, new String(""));
+
     }
 
     public AuthData loginUser(String username, String password) {
 
-
+        return new AuthData(username, new String(""));
     }
 
     public void logoutUser(String authToken) {
@@ -89,10 +93,12 @@ public class ServerFacade {
 
     public List<GameData> listGames(String authToken) {
 
+        return new ArrayList<GameData>();
     }
 
     public int createGame(String authToken, String gameName) {
 
+        return 0;
     }
 
     public void joinGame(String authToken, int gameID, String teamColor) {
