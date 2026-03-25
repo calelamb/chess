@@ -28,7 +28,9 @@ public class ServerFacade {
         this.serverUrl = serverUrl;
     }
 
-    private <T> T makeRequest(String method, String path, String authToken, Class<T> responseClass, Object body) throws URISyntaxException, IOException, InterruptedException, BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
+    private <T> T makeRequest(String method, String path, String authToken, Class<T> responseClass, Object body) throws URISyntaxException,
+            IOException, InterruptedException, BadRequestException,
+            UnauthorizedException, AlreadyTakenException, DataAccessException {
         String fullUrl = serverUrl + path;
         String jsonBody;
 
@@ -75,16 +77,16 @@ public class ServerFacade {
 
     }
 
-    public AuthData registerUser(String username, String password, String email) {
-        UserData ud = new UserData(username, password, email);
+    public AuthData registerUser(String username, String password, String email) throws UnauthorizedException, BadRequestException, URISyntaxException,
+            IOException, InterruptedException, AlreadyTakenException, DataAccessException {
 
-        return new AuthData(username, new String(""));
+        UserData ud = new UserData(username, password, email);
+        return makeRequest("POST", "/user", null, AuthData.class, ud);
 
     }
 
     public AuthData loginUser(String username, String password) {
-
-        return new AuthData(username, new String(""));
+        makeRequest("POST", "/session", null, new UserData(username, password, null), AuthData.class);
     }
 
     public void logoutUser(String authToken) {
