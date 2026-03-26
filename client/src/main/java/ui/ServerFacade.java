@@ -94,13 +94,17 @@ public class ServerFacade {
         makeRequest()
     }
 
-    public int createGame(String authToken, String gameName) {
-
+    public int createGame(String authToken, String gameName) throws UnauthorizedException, BadRequestException, URISyntaxException,
+            IOException, InterruptedException, AlreadyTakenException,
+            DataAccessException {
+        makeRequest("POST", "/game", authToken, AuthData.class, gameName);
         return 0;
     }
 
     public void joinGame(String authToken, int gameID, String teamColor) throws UnauthorizedException, BadRequestException, URISyntaxException,
             IOException, InterruptedException, AlreadyTakenException, DataAccessException {
-        makeRequest("PUT", "/game", authToken, null, gameID);
+        record JoinGameRequest(int gameID, String playerColor) {
+        }
+        makeRequest("PUT", "/game", authToken, null, new JoinGameRequest(gameID, teamColor));
     }
 }
