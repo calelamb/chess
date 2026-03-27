@@ -8,6 +8,20 @@ import static ui.EscapeSequences.*;
 
 public class BoardRenderer {
     public void drawBoard(ChessBoard board, boolean whiteView) {
+        int start, end, step;
+        if (whiteView) {
+            start = 8;
+            end = 1;
+            step = -1;
+        } else {
+            start = 1;
+            end = 8;
+            step = 1;
+        }
+        for (int row = start; row != end + step; row += step) {
+
+        }
+
 
     }
 
@@ -63,6 +77,8 @@ public class BoardRenderer {
                 }
             }
 
+            default -> return EMPTY;
+
         }
     }
 
@@ -74,7 +90,4 @@ public class BoardRenderer {
         }
     }
 
-    public static void main(String args[]) {
-
-    }
 }
