@@ -16,6 +16,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ServerFacade {
@@ -90,8 +91,14 @@ public class ServerFacade {
         makeRequest("DELETE", "/session", authToken, null, null);
     }
 
-    public List<GameData> listGames(String authToken) {
-        makeRequest()
+    public List<GameData> listGames(String authToken) throws UnauthorizedException, BadRequestException, URISyntaxException,
+            IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+        record listGamesResponse(Collection<GameData> g) {
+        }
+        ;
+
+        listGamesResponse result = makeRequest("GET", "/game", authToken, listGamesResponse.class, null);
+        return new ArrayList<>(result.g);
     }
 
     public int createGame(String authToken, String gameName) throws UnauthorizedException, BadRequestException, URISyntaxException,
