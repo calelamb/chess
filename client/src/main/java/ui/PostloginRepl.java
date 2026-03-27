@@ -41,17 +41,52 @@ public class PostloginRepl {
                 }
 
                 case "logout" -> {
-                    s.logoutUser(a.authToken());
-                    return;
+                    try {
+                        s.logoutUser(a.authToken());
+                        return;
+                    } catch (Exception e) {
+                        System.out.print("error: " + e.getMessage());
+                    }
                 }
 
                 case "list" -> {
-                    Collection<GameData> games = s.listGames(a.authToken());
-                    int counter = 0;
-                    for (GameData game : games) {
-                        System.out.print(game.gameName());
+                    try {
+                        Collection<GameData> games = s.listGames(a.authToken());
+                        int counter = 1;
+                        for (GameData game : games) {
+                            System.out.println(counter + ": " + game.gameName());
+                            counter++;
+                        }
+                    } catch (Exception e) {
+                        System.out.print("error: " + e.getMessage());
                     }
                 }
+
+                case "create" -> {
+                    try {
+                        s.createGame(a.authToken(), tokens[1]);
+                    } catch (Exception e) {
+                        System.out.print("error: " + e.getMessage());
+                    }
+                }
+
+                case "play" -> {
+                    try {
+                        s.joinGame(a.authToken(), Integer.parseInt(tokens[1]), tokens[2]);
+                    } catch (Exception e) {
+                        System.out.print("error: " + e.getMessage());
+                    }
+                }
+
+                case "observe" -> {
+                    try {
+                        s.joinGame(a.authToken(), Integer.parseInt(tokens[1]), null);
+                    } catch (Exception e) {
+                        System.out.print("error: " + e.getMessage());
+                    }
+                }
+
+                default -> System.out.println("Unknown Command");
             }
         }
     }

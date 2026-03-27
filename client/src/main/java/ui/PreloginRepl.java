@@ -39,7 +39,7 @@ public class PreloginRepl {
                 case "login" -> {
                     try {
                         AuthData auth = s.loginUser(tokens[1], tokens[2]);
-                        PostloginRepl pl = new PostloginRepl(s, auth);
+                        PostloginRepl pl = new PostloginRepl(s, auth, scanner);
                         pl.run();
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
@@ -49,7 +49,7 @@ public class PreloginRepl {
                 case "register" -> {
                     try {
                         AuthData auth = s.registerUser(tokens[1], tokens[2], tokens[3]);
-                        PostloginRepl pl = new PostloginRepl(s, auth);
+                        PostloginRepl pl = new PostloginRepl(s, auth, scanner);
                         pl.run();
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
