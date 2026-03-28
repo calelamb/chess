@@ -3,6 +3,7 @@ package ui;
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
+import chess.ChessPosition;
 
 import static ui.EscapeSequences.*;
 
@@ -18,11 +19,28 @@ public class BoardRenderer {
             end = 8;
             step = 1;
         }
+
+        String cols = whiteView ? "  a  b  c  d  e  f  g  h  " : "  h  g  f  e  d  c  b  a  ";
+        System.out.println(SET_BG_COLOR_DARK_GREY + cols + RESET_BG_COLOR);
         for (int row = start; row != end + step; row += step) {
+            System.out.print(SET_BG_COLOR_DARK_GREY + " " + row + " " + RESET_BG_COLOR);
+            int colStart, colEnd, colStep;
+            if (whiteView) {
+                colStart = 1;
+                colEnd = 8;
+                colStep = 1;
+            } else {
+                colStart = 8;
+                colEnd = 1;
+                colStep = -1;
+            }
+            for (int col = colStart; col != colEnd + colStep; col += colStep) {
+                System.out.print(getSquareColor(row, col) + getPieceSymbol(board.getPiece(new ChessPosition(row, col))));
+            }
+            System.out.println(RESET_BG_COLOR + SET_BG_COLOR_DARK_GREY + " " + row + " " + RESET_BG_COLOR);
 
         }
-
-
+        System.out.println(SET_BG_COLOR_DARK_GREY + cols + RESET_BG_COLOR);
     }
 
     private String getPieceSymbol(ChessPiece piece) {
@@ -77,7 +95,9 @@ public class BoardRenderer {
                 }
             }
 
-            default -> return EMPTY;
+            default -> {
+                return EMPTY;
+            }
 
         }
     }
