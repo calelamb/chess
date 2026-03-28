@@ -1,7 +1,7 @@
 package server;
 
 import dataaccess.DataAccess;
-import dataaccess.DataAccessException;
+import exception.DataAccessException;
 import dataaccess.MySqlDataAccess;
 import io.javalin.*;
 import service.*;
