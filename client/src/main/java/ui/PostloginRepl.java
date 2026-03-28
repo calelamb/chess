@@ -1,6 +1,6 @@
 package ui;
 
-import chess.ChessGame;
+import chess.ChessBoard;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.DataAccessException;
@@ -22,6 +22,14 @@ public class PostloginRepl {
         this.s = s;
         this.scanner = scanner;
         this.a = auth;
+    }
+
+    private void printGames(Collection<GameData> games) {
+        int counter = 1;
+        for (GameData game : games) {
+            System.out.println(counter + ": " + game.gameName());
+            counter++;
+        }
     }
 
     public void run() throws UnauthorizedException, BadRequestException, URISyntaxException,
@@ -52,11 +60,7 @@ public class PostloginRepl {
                 case "list" -> {
                     try {
                         Collection<GameData> games = s.listGames(a.authToken());
-                        int counter = 1;
-                        for (GameData game : games) {
-                            System.out.println(counter + ": " + game.gameName());
-                            counter++;
-                        }
+                        printGames(games);
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
                     }
@@ -73,6 +77,7 @@ public class PostloginRepl {
                 case "play" -> {
                     try {
                         s.joinGame(a.authToken(), Integer.parseInt(tokens[1]), tokens[2]);
+                        new BoardRenderer().drawBoard(new ChessBoard(), tokens[2].equals("WHITE"));
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
                     }
@@ -81,6 +86,8 @@ public class PostloginRepl {
                 case "observe" -> {
                     try {
                         s.joinGame(a.authToken(), Integer.parseInt(tokens[1]), null);
+                        new BoardRenderer().drawBoard(new ChessBoard(), true);
+
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
                     }

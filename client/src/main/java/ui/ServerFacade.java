@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ServerFacade {
 
-    private final Gson GSON = new Gson();
+    private final Gson gson = new Gson();
     private final HttpClient client = HttpClient.newHttpClient();
     private final String serverUrl;
 
@@ -29,12 +29,18 @@ public class ServerFacade {
         this.serverUrl = serverUrl;
     }
 
-    private <T> T makeRequest(String method, String path, String authToken, Class<T> responseClass, Object body) throws URISyntaxException, IOException, InterruptedException, BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
+    private <T> T makeRequest(String method, String path, String authToken, Class<T> responseClass, Object body) throws URISyntaxException,
+            IOException,
+            InterruptedException,
+            BadRequestException,
+            UnauthorizedException,
+            AlreadyTakenException,
+            DataAccessException {
         String fullUrl = serverUrl + path;
         String jsonBody;
 
         if (body != null) {
-            jsonBody = GSON.toJson(body);
+            jsonBody = gson.toJson(body);
         } else {
             jsonBody = "";
         }
@@ -67,7 +73,7 @@ public class ServerFacade {
 
             default:
                 if (responseClass != null) {
-                    return GSON.fromJson(response.body(), responseClass);
+                    return gson.fromJson(response.body(), responseClass);
                 } else {
                     return null;
                 }
@@ -76,7 +82,13 @@ public class ServerFacade {
 
     }
 
-    public AuthData registerUser(String username, String password, String email) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public AuthData registerUser(String username, String password, String email) throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+    AlreadyTakenException,
+    DataAccessException {
 
         UserData ud = new UserData(username, password, email);
         return makeRequest("POST", "/user", null, AuthData.class, ud);
@@ -84,20 +96,43 @@ public class ServerFacade {
     }
 
 
-    public void clearDatabase() throws UnauthorizedException, BadRequestException, URISyntaxException,
-            IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public void clearDatabase() throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+            AlreadyTakenException,
+            DataAccessException {
         makeRequest("DELETE", "/db", null, null, null);
     }
 
-    public AuthData loginUser(String username, String password) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public AuthData loginUser(String username, String password) throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+            AlreadyTakenException,
+            DataAccessException {
         return makeRequest("POST", "/session", null, AuthData.class, new UserData(username, password, null));
     }
 
-    public void logoutUser(String authToken) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public void logoutUser(String authToken) throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+            AlreadyTakenException,
+            DataAccessException {
         makeRequest("DELETE", "/session", authToken, null, null);
     }
 
-    public List<GameData> listGames(String authToken) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public List<GameData> listGames(String authToken) throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+            AlreadyTakenException,
+            DataAccessException {
         record ListGamesResponse(Collection<GameData> games) {
         }
         ;
@@ -106,7 +141,13 @@ public class ServerFacade {
         return new ArrayList<>(result.games());
     }
 
-    public int createGame(String authToken, String gameName) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public int createGame(String authToken, String gameName) throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+            AlreadyTakenException,
+            DataAccessException {
 
         record CreateGameRequest(String gameName) {
         }
@@ -118,7 +159,13 @@ public class ServerFacade {
         return result.gameID();
     }
 
-    public void joinGame(String authToken, int gameID, String teamColor) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public void joinGame(String authToken, int gameID, String teamColor) throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+            AlreadyTakenException,
+            DataAccessException {
         record JoinGameRequest(int gameID, String playerColor) {
         }
         makeRequest("PUT", "/game", authToken, null, new JoinGameRequest(gameID, teamColor));

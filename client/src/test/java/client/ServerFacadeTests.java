@@ -91,7 +91,13 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void listGamesSuccess() throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public void listGamesSuccess() throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+            AlreadyTakenException,
+            DataAccessException {
         AuthData auth = facade.registerUser("testuser", "password", "test@email.com");
         facade.createGame(auth.authToken(), "testgame");
         var games = facade.listGames(auth.authToken());
@@ -107,7 +113,13 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void createGameSuccess() throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public void createGameSuccess() throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+            AlreadyTakenException,
+            DataAccessException {
         AuthData auth = facade.registerUser("testuser", "password", "test@email.com");
         int gameID = facade.createGame(auth.authToken(), "testgame");
         Assertions.assertTrue(gameID > 0);
@@ -121,7 +133,13 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void joinGameSuccess() throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public void joinGameSuccess() throws UnauthorizedException,
+            BadRequestException,
+            URISyntaxException,
+            IOException,
+            InterruptedException,
+            AlreadyTakenException,
+            DataAccessException {
         AuthData auth = facade.registerUser("testuser", "password", "test@email.com");
         int gameID = facade.createGame(auth.authToken(), "testgame");
         facade.joinGame(auth.authToken(), gameID, "WHITE");
