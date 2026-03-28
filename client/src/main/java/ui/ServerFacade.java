@@ -83,6 +83,12 @@ public class ServerFacade {
 
     }
 
+
+    public void clearDatabase() throws UnauthorizedException, BadRequestException, URISyntaxException,
+            IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+        makeRequest("DELETE", "/db", null, null, null);
+    }
+
     public AuthData loginUser(String username, String password) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
         return makeRequest("POST", "/session", null, AuthData.class, new UserData(username, password, null));
     }
@@ -91,25 +97,28 @@ public class ServerFacade {
         makeRequest("DELETE", "/session", authToken, null, null);
     }
 
-    public List<GameData> listGames(String authToken) throws UnauthorizedException, BadRequestException, URISyntaxException,
-            IOException, InterruptedException, AlreadyTakenException, DataAccessException {
-        record listGamesResponse(Collection<GameData> g) {
+    public List<GameData> listGames(String authToken) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+        record ListGamesResponse(Collection<GameData> g) {
         }
         ;
 
-        listGamesResponse result = makeRequest("GET", "/game", authToken, listGamesResponse.class, null);
-        return new ArrayList<>(result.g);
+        ListGamesResponse result = makeRequest("GET", "/game", authToken, ListGamesResponse.class, null);
+        return new ArrayList<>(result.g());
     }
 
-    public int createGame(String authToken, String gameName) throws UnauthorizedException, BadRequestException, URISyntaxException,
-            IOException, InterruptedException, AlreadyTakenException,
-            DataAccessException {
-        makeRequest("POST", "/game", authToken, AuthData.class, gameName);
-        return 0;
+    public int createGame(String authToken, String gameName) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+
+        record CreateGameRequest(String gameName) {
+        }
+
+        record CreateGameResponse(int gameID) {
+        }
+
+        CreateGameResponse result = makeRequest("POST", "/game", authToken, CreateGameResponse.class, new CreateGameRequest(gameName));
+        return result.gameID();
     }
 
-    public void joinGame(String authToken, int gameID, String teamColor) throws UnauthorizedException, BadRequestException, URISyntaxException,
-            IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+    public void joinGame(String authToken, int gameID, String teamColor) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
         record JoinGameRequest(int gameID, String playerColor) {
         }
         makeRequest("PUT", "/game", authToken, null, new JoinGameRequest(gameID, teamColor));
