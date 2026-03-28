@@ -51,4 +51,29 @@ public class ServerFacadeTests {
         Assertions.assertEquals("testuser", result.username());
     }
 
+    @Test
+    public void registerUserFail() {
+        Assertions.assertThrows(AlreadyTakenException.class, () -> {
+            facade.registerUser("testuser", "password", "test@email.com");
+            facade.registerUser("testuser", "password", "test@email.com");
+        });
+    }
+
+    @Test
+    public void loginUserSuccess() throws UnauthorizedException, BadRequestException, URISyntaxException,
+            IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+        facade.registerUser("testuser", "password", "test@email.com");
+        AuthData result = facade.loginUser("testuser", "password");
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("testuser", result.username());
+    }
+
+    @Test
+    public void loginUserFail() {
+        Assertions.assertThrows(UnauthorizedException.class, () -> {
+            facade.registerUser("testuser", "password", "test@email.com");
+            facade.loginUser("testuser", "wrongpassword");
+        });
+    }
+
 }
