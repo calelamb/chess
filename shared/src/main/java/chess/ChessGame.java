@@ -1,6 +1,6 @@
 package chess;
 
-import exception.InvalidMoveException;
+import import chess.InvalidMoveException;
 
 import java.util.ArrayList;
 import java.util.Collection;
