@@ -1,4 +1,4 @@
-package passoff.chess.piecemoves.game;
+package passoff.chess.game;
 
 import chess.*;
 import exception.InvalidMoveException;
