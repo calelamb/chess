@@ -98,12 +98,12 @@ public class ServerFacade {
     }
 
     public List<GameData> listGames(String authToken) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
-        record ListGamesResponse(Collection<GameData> g) {
+        record ListGamesResponse(Collection<GameData> games) {
         }
         ;
 
         ListGamesResponse result = makeRequest("GET", "/game", authToken, ListGamesResponse.class, null);
-        return new ArrayList<>(result.g());
+        return new ArrayList<>(result.games());
     }
 
     public int createGame(String authToken, String gameName) throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {

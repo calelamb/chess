@@ -76,4 +76,65 @@ public class ServerFacadeTests {
         });
     }
 
+    @Test
+    public void logoutUserSuccess() throws UnauthorizedException, BadRequestException, URISyntaxException,
+            IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+        AuthData auth = facade.registerUser("testuser", "password", "test@email.com");
+        facade.logoutUser(auth.authToken());
+    }
+
+    @Test
+    public void logoutUserFail() {
+        Assertions.assertThrows(UnauthorizedException.class, () -> {
+            facade.logoutUser("badtoken");
+        });
+    }
+
+    @Test
+    public void listGamesSuccess() throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+        AuthData auth = facade.registerUser("testuser", "password", "test@email.com");
+        facade.createGame(auth.authToken(), "testgame");
+        var games = facade.listGames(auth.authToken());
+        Assertions.assertNotNull(games);
+        Assertions.assertFalse(games.isEmpty());
+    }
+
+    @Test
+    public void listGamesFail() {
+        Assertions.assertThrows(UnauthorizedException.class, () -> {
+            facade.listGames("badtoken");
+        });
+    }
+
+    @Test
+    public void createGameSuccess() throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+        AuthData auth = facade.registerUser("testuser", "password", "test@email.com");
+        int gameID = facade.createGame(auth.authToken(), "testgame");
+        Assertions.assertTrue(gameID > 0);
+    }
+
+    @Test
+    public void createGameFail() {
+        Assertions.assertThrows(UnauthorizedException.class, () -> {
+            facade.createGame("badtoken", "testgame");
+        });
+    }
+
+    @Test
+    public void joinGameSuccess() throws UnauthorizedException, BadRequestException, URISyntaxException, IOException, InterruptedException, AlreadyTakenException, DataAccessException {
+        AuthData auth = facade.registerUser("testuser", "password", "test@email.com");
+        int gameID = facade.createGame(auth.authToken(), "testgame");
+        facade.joinGame(auth.authToken(), gameID, "WHITE");
+    }
+
+    @Test
+    public void joinGameFail() {
+        Assertions.assertThrows(AlreadyTakenException.class, () -> {
+            AuthData auth = facade.registerUser("testuser", "password", "test@email.com");
+            int gameID = facade.createGame(auth.authToken(), "testgame");
+            facade.joinGame(auth.authToken(), gameID, "WHITE");
+            facade.joinGame(auth.authToken(), gameID, "WHITE");
+        });
+    }
+
 }
