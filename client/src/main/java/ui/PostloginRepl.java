@@ -57,6 +57,15 @@ public class PostloginRepl {
 
     }
 
+    private boolean hasExpectedArgs(String[] tokens, int expected) {
+        if (tokens.length != expected) {
+            System.out.println("error: invalid amount of parameters");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     private void printGames(Collection<GameData> games) {
         int counter = 1;
         for (GameData game : games) {
@@ -69,7 +78,11 @@ public class PostloginRepl {
             IOException, InterruptedException, AlreadyTakenException, DataAccessException {
         while (true) {
             System.out.print("[LOGGED IN] >>>");
-            String line = scanner.nextLine();
+            String line = scanner.nextLine().trim();
+            if (line.isEmpty()) {
+                System.out.println("error: invalid amount of parameters");
+                continue;
+            }
             String[] tokens = line.split(" ");
             switch (tokens[0]) {
                 case "help" -> {
@@ -100,6 +113,9 @@ public class PostloginRepl {
                 }
 
                 case "create" -> {
+                    if (!hasExpectedArgs(tokens, 2)) {
+                        break;
+                    }
                     try {
                         s.createGame(a.authToken(), tokens[1]);
                     } catch (Exception e) {
@@ -108,6 +124,9 @@ public class PostloginRepl {
                 }
 
                 case "play" -> {
+                    if (!hasExpectedArgs(tokens, 3)) {
+                        break;
+                    }
                     try {
                         List<GameData> games = new ArrayList<>(s.listGames(a.authToken()));
                         GameData selectedGame = getSelectedGame(games, tokens[1]);
@@ -121,6 +140,9 @@ public class PostloginRepl {
                 }
 
                 case "observe" -> {
+                    if (!hasExpectedArgs(tokens, 2)) {
+                        break;
+                    }
                     try {
                         List<GameData> games = new ArrayList<>(s.listGames(a.authToken()));
                         GameData selectedGame = getSelectedGame(games, tokens[1]);
