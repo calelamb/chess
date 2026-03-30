@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 public class ClientMain {
     public static void main(String[] args) throws UnauthorizedException, BadRequestException, URISyntaxException,
             IOException, InterruptedException, AlreadyTakenException, DataAccessException {
-        ServerFacade sf = new ServerFacade("http://localhost:8000");
+        ServerFacade sf = new ServerFacade("http://localhost:8080");
         PreloginRepl pl = new PreloginRepl(sf);
         pl.run();
     }

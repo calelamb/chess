@@ -11,7 +11,9 @@ import model.GameData;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
 public class PostloginRepl {
@@ -77,7 +79,9 @@ public class PostloginRepl {
 
                 case "play" -> {
                     try {
-                        s.joinGame(a.authToken(), Integer.parseInt(tokens[1]), tokens[2]);
+                        List<GameData> games = new ArrayList<>(s.listGames(a.authToken()));
+                        int index = Integer.parseInt(tokens[1]) - 1;
+                        s.joinGame(a.authToken(), games.get(index).gameID(), tokens[2]);
                         ChessBoard board = new ChessBoard();
                         board.resetBoard();
                         new BoardRenderer().drawBoard(board, tokens[2].equals("WHITE"));
@@ -88,7 +92,9 @@ public class PostloginRepl {
 
                 case "observe" -> {
                     try {
-                        s.joinGame(a.authToken(), Integer.parseInt(tokens[1]), null);
+                        List<GameData> games = new ArrayList<>(s.listGames(a.authToken()));
+                        int index = Integer.parseInt(tokens[1]) - 1;
+                        s.joinGame(a.authToken(), games.get(index).gameID(), null);
                         ChessBoard board = new ChessBoard();
                         board.resetBoard();
                         new BoardRenderer().drawBoard(board, true);
