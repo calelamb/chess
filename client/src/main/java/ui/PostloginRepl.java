@@ -30,16 +30,22 @@ public class PostloginRepl {
 
     private String formatSeat(String color, String username) {
         if (username == null) {
-            return new String(color + ": open");
+            return color + ": open";
         } else {
-            return new String(color + ": " + username);
+            return color + ": " + username;
         }
+    }
+
+    private String formatGameLine(int number, GameData game) {
+        String whiteSeat = formatSeat("WHITE", game.whiteUsername());
+        String blackSeat = formatSeat("BLACK", game.blackUsername());
+        return number + ": " + game.gameName() + " | " + whiteSeat + " | " + blackSeat;
     }
 
     private void printGames(Collection<GameData> games) {
         int counter = 1;
         for (GameData game : games) {
-            System.out.println(counter + ": " + game.gameName());
+            System.out.println(formatGameLine(counter, game));
             counter++;
         }
     }
