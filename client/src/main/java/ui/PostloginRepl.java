@@ -1,7 +1,6 @@
 package ui;
 
 import chess.ChessBoard;
-import chess.ChessPosition;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.DataAccessException;
@@ -17,6 +16,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PostloginRepl {
+
+    private List<GameData> lastListedGames;
     ServerFacade s;
     Scanner scanner;
     AuthData a;
@@ -25,6 +26,14 @@ public class PostloginRepl {
         this.s = s;
         this.scanner = scanner;
         this.a = auth;
+    }
+
+    private String formatSeat(String color, String username) {
+        if (username == null) {
+            return new String(color + ": open");
+        } else {
+            return new String(color + ": " + username);
+        }
     }
 
     private void printGames(Collection<GameData> games) {
