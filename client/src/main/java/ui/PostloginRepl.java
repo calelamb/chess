@@ -17,7 +17,6 @@ import java.util.Scanner;
 
 public class PostloginRepl {
 
-    private List<GameData> lastListedGames;
     ServerFacade s;
     Scanner scanner;
     AuthData a;
@@ -40,6 +39,22 @@ public class PostloginRepl {
         String whiteSeat = formatSeat("WHITE", game.whiteUsername());
         String blackSeat = formatSeat("BLACK", game.blackUsername());
         return number + ": " + game.gameName() + " | " + whiteSeat + " | " + blackSeat;
+    }
+
+    private GameData getSelectedGame(List<GameData> games, String input) throws BadRequestException {
+        int index;
+        try {
+            index = Integer.parseInt(input) - 1;
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("Invalid game number");
+        }
+
+        if (index < 0 || index >= games.size()) {
+            throw new BadRequestException("Invalid game number");
+        }
+
+        return games.get(index);
+
     }
 
     private void printGames(Collection<GameData> games) {
@@ -95,8 +110,8 @@ public class PostloginRepl {
                 case "play" -> {
                     try {
                         List<GameData> games = new ArrayList<>(s.listGames(a.authToken()));
-                        int index = Integer.parseInt(tokens[1]) - 1;
-                        s.joinGame(a.authToken(), games.get(index).gameID(), tokens[2]);
+                        GameData selectedGame = getSelectedGame(games, tokens[1]);
+                        s.joinGame(a.authToken(), selectedGame.gameID(), tokens[2]);
                         ChessBoard board = new ChessBoard();
                         board.resetBoard();
                         new BoardRenderer().drawBoard(board, tokens[2].equals("WHITE"));
@@ -108,8 +123,8 @@ public class PostloginRepl {
                 case "observe" -> {
                     try {
                         List<GameData> games = new ArrayList<>(s.listGames(a.authToken()));
-                        int index = Integer.parseInt(tokens[1]) - 1;
-                        s.joinGame(a.authToken(), games.get(index).gameID(), null);
+                        GameData selectedGame = getSelectedGame(games, tokens[1]);
+                        s.joinGame(a.authToken(), selectedGame.gameID(), null);
                         ChessBoard board = new ChessBoard();
                         board.resetBoard();
                         new BoardRenderer().drawBoard(board, true);
