@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessBoard;
+import chess.ChessPosition;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.DataAccessException;
@@ -77,7 +78,9 @@ public class PostloginRepl {
                 case "play" -> {
                     try {
                         s.joinGame(a.authToken(), Integer.parseInt(tokens[1]), tokens[2]);
-                        new BoardRenderer().drawBoard(new ChessBoard(), tokens[2].equals("WHITE"));
+                        ChessBoard board = new ChessBoard();
+                        board.resetBoard();
+                        new BoardRenderer().drawBoard(board, tokens[2].equals("WHITE"));
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
                     }
@@ -86,7 +89,9 @@ public class PostloginRepl {
                 case "observe" -> {
                     try {
                         s.joinGame(a.authToken(), Integer.parseInt(tokens[1]), null);
-                        new BoardRenderer().drawBoard(new ChessBoard(), true);
+                        ChessBoard board = new ChessBoard();
+                        board.resetBoard();
+                        new BoardRenderer().drawBoard(board, true);
 
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
