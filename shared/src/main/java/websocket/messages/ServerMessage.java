@@ -1,5 +1,9 @@
 package websocket.messages;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.util.Objects;
 
 /**
@@ -9,7 +13,11 @@ import java.util.Objects;
  * methods.
  */
 public class ServerMessage {
+
     ServerMessageType serverMessageType;
+
+    private static final Gson GSON = new Gson();
+
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -23,6 +31,31 @@ public class ServerMessage {
 
     public ServerMessageType getServerMessageType() {
         return this.serverMessageType;
+    }
+
+    public static ServerMessage jsonToMessage(String jsonInput) {
+        JsonObject json = JsonParser.parseString(jsonInput).getAsJsonObject();
+        String serverMessageType = json.get("serverMessageType").getAsString();
+
+        switch (serverMessageType) {
+
+            case ("LOAD_GAME") -> {
+                return GSON.fromJson(jsonInput, LoadGameMessage.class);
+            }
+
+            case ("ERROR") -> {
+                return GSON.fromJson(jsonInput, ErrorMessage.class);
+            }
+
+            case ("NOTIFICATION") -> {
+                return GSON.fromJson(jsonInput, NotificationMessage.class);
+            }
+
+            default -> {
+                throw new IllegalArgumentException("Invalid Command Type");
+            }
+        }
+
     }
 
     @Override

@@ -20,7 +20,7 @@ public class UserGameCommand {
 
     private final Integer gameID;
 
-    private static Gson GSON = new Gson();
+    private static final Gson GSON = new Gson();
 
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
         this.commandType = commandType;
