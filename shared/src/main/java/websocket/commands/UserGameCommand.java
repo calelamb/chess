@@ -52,15 +52,7 @@ public class UserGameCommand {
         String commandType = json.get("commandType").getAsString();
 
         switch (commandType) {
-            case ("CONNECT") -> {
-                return GSON.fromJson(jsonInput, UserGameCommand.class);
-            }
-
-            case ("LEAVE") -> {
-                return GSON.fromJson(jsonInput, UserGameCommand.class);
-            }
-
-            case ("RESIGN") -> {
+            case ("CONNECT"), ("LEAVE"), ("RESIGN") -> {
                 return GSON.fromJson(jsonInput, UserGameCommand.class);
             }
 
