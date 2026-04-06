@@ -1,5 +1,9 @@
 package websocket.commands;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.util.Objects;
 
 /**
@@ -15,6 +19,8 @@ public class UserGameCommand {
     private final String authToken;
 
     private final Integer gameID;
+
+    private static Gson GSON = new Gson();
 
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
         this.commandType = commandType;
@@ -39,6 +45,33 @@ public class UserGameCommand {
 
     public Integer getGameID() {
         return gameID;
+    }
+
+    public static UserGameCommand jsonToCommand(String jsonInput) throws IllegalArgumentException {
+        JsonObject json = JsonParser.parseString(jsonInput).getAsJsonObject();
+        String commandType = json.get("commandType").getAsString();
+
+        switch (commandType) {
+            case ("CONNECT") -> {
+                return GSON.fromJson(jsonInput, UserGameCommand.class);
+            }
+
+            case ("LEAVE") -> {
+                return GSON.fromJson(jsonInput, UserGameCommand.class);
+            }
+
+            case ("RESIGN") -> {
+                return GSON.fromJson(jsonInput, UserGameCommand.class);
+            }
+
+            case ("MAKE_MOVE") -> {
+                return GSON.fromJson(jsonInput, MakeMoveCommand.class);
+            }
+
+            default -> {
+                throw new IllegalArgumentException("Invalid Command Type");
+            }
+        }
     }
 
     @Override
