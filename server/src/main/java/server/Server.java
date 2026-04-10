@@ -28,7 +28,8 @@ public class Server {
         var listGamesHandler = new ListGamesHandler(new ListGamesService(dataAccess));
         var createGameHandler = new CreateGameHandler(new CreateGameService(dataAccess));
         var joinGameHandler = new JoinGameHandler(new JoinGameService(dataAccess));
-        var websocketHandler = new WebSocket();
+        var gameplayService = new GamePlayService(dataAccess);
+        var websocketHandler = new WebSocket(gameplayService);
 
         javalin.delete("/db", clearHandler::handle);
         javalin.post("/user", registerHandler::handle);

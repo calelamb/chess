@@ -1,4 +1,5 @@
 package chess;
+
 import chess.InvalidMoveException;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class ChessGame {
 
     private TeamColor teamTurn;
     private ChessBoard gameState;
+    private boolean gameOver = false;
 
     public ChessGame() {
 
@@ -23,6 +25,14 @@ public class ChessGame {
         this.gameState = new ChessBoard();
         gameState.resetBoard();
 
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 
     /**

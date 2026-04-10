@@ -1,5 +1,7 @@
 package service;
 
+import chess.ChessGame;
+import chess.InvalidMoveException;
 import dataaccess.DataAccess;
 import exception.DataAccessException;
 import model.AuthData;
@@ -51,7 +53,7 @@ public class GamePlayService {
     public GamePlayResult makeMove(MakeMoveCommand move) throws DataAccessException {
         GameData game = data.getGame(move.getGameID());
         AuthData auth = data.getAuth(move.getAuthToken());
-        String role;
+        String role = "";
 
         if (auth == null) {
             return new GamePlayResult(List.of(new ErrorMessage("Error: invalid auth")), null);
@@ -60,28 +62,111 @@ public class GamePlayService {
             return new GamePlayResult(List.of(new ErrorMessage("Error: invalid game ID")), null);
         }
 
+        ChessGame chessGame = game.game();
         if (auth.username().equals(game.whiteUsername())) {
             role = "white";
         } else if (auth.username().equals(game.blackUsername())) {
             role = "black";
         } else {
             role = "observer";
-            return new GamePlayResult(List.of(new ErrorMessage("Invalid role: Must be a player")), null);
+        }
+        if (role.equals("observer")) {
+            return new GamePlayResult(List.of(new ErrorMessage("Error: observers cannot move")), null);
+        }
+        ChessGame.TeamColor senderColor = role.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+
+        if (chessGame.getTeamTurn() != senderColor) {
+            return new GamePlayResult(List.of(new ErrorMessage("Error: not your turn")), null);
         }
 
+        try {
+            chessGame.makeMove(move.getChessMove());
+        } catch (InvalidMoveException e) {
+            return new GamePlayResult(List.of(new ErrorMessage("Error: invalid move")), null);
+        }
+
+        if (chessGame.isInCheckmate(chessGame.getTeamTurn()) || chessGame.isInStalemate(chessGame.getTeamTurn())) {
+            chessGame.setGameOver(true);
+        }
+
+        data.updateGame(game);
+
+        String moveDesc = auth.username() + " moved " + move.getChessMove().toString();
+        return new GamePlayResult(
+                List.of(new LoadGameMessage(chessGame)),
+                List.of(new LoadGameMessage(chessGame), new NotificationMessage(moveDesc))
+        );
+
     }
 
 
-    public GamePlayResult leave(UserGameCommand command) {
-        return null;
+    public GamePlayResult leave(UserGameCommand command) throws DataAccessException {
+        GameData game = data.getGame(command.getGameID());
+        AuthData auth = data.getAuth(command.getAuthToken());
 
+        if (auth == null) {
+            return new GamePlayResult(List.of(new ErrorMessage("Error: invalid auth")), null);
+        }
+        if (game == null) {
+            return new GamePlayResult(List.of(new ErrorMessage("Error: invalid game ID")), null);
+        }
+
+        String role;
+        if (auth.username().equals(game.whiteUsername())) {
+            role = "white";
+        } else if (auth.username().equals(game.blackUsername())) {
+            role = "black";
+        } else {
+            role = "observer";
+        }
+
+        if (!role.equals("observer")) {
+            GameData updated = new GameData(
+                    game.gameID(),
+                    role.equals("white") ? null : game.whiteUsername(),
+                    role.equals("black") ? null : game.blackUsername(),
+                    game.gameName(),
+                    game.game()
+            );
+            data.updateGame(updated);
+        }
+
+        String leaveText = auth.username() + " left the game";
+        return new GamePlayResult(List.of(), List.of(new NotificationMessage(leaveText)));
     }
 
 
-    public GamePlayResult resign(UserGameCommand command) {
-        return null;
+    public GamePlayResult resign(UserGameCommand command) throws DataAccessException {
+        GameData game = data.getGame(command.getGameID());
+        AuthData auth = data.getAuth(command.getAuthToken());
 
+        if (auth == null) {
+            return new GamePlayResult(List.of(new ErrorMessage("Error: invalid auth")), null);
+        }
+        if (game == null) {
+            return new GamePlayResult(List.of(new ErrorMessage("Error: invalid game ID")), null);
+        }
+
+        String role;
+        if (auth.username().equals(game.whiteUsername())) {
+            role = "white";
+        } else if (auth.username().equals(game.blackUsername())) {
+            role = "black";
+        } else {
+            return new GamePlayResult(List.of(new ErrorMessage("Error: observers cannot resign")), null);
+        }
+
+        ChessGame chessGame = game.game();
+        if (chessGame.isGameOver()) {
+            return new GamePlayResult(List.of(new ErrorMessage("Error: game is already over")), null);
+        }
+
+        chessGame.setGameOver(true);
+        data.updateGame(game);
+
+        String resignText = auth.username() + " resigned";
+        NotificationMessage notification = new NotificationMessage(resignText);
+        return new GamePlayResult(List.of(notification), List.of(notification));
     }
-
 
 }
