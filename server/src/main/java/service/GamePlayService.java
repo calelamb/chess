@@ -11,6 +11,8 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
+import java.util.List;
+
 public class GamePlayService {
 
     private final DataAccess data;
@@ -19,7 +21,7 @@ public class GamePlayService {
         this.data = data;
     }
 
-    public record GamePlayResult(ServerMessage toSender, ServerMessage toOthers) {
+    public record GamePlayResult(List<ServerMessage> toSender, List<ServerMessage> toOthers) {
     }
 
 
@@ -27,10 +29,10 @@ public class GamePlayService {
         GameData game = data.getGame(command.getGameID());
         AuthData auth = data.getAuth(command.getAuthToken());
         if (auth == null) {
-            return new GamePlayResult(new ErrorMessage("Error: invalid auth"), null);
+            return new GamePlayResult(List.of(new ErrorMessage("Error: invalid auth")), null);
         }
         if (game == null) {
-            return new GamePlayResult(new ErrorMessage("Error: invalid game ID"), null);
+            return new GamePlayResult(List.of(new ErrorMessage("Error: invalid game ID")), null);
         }
         String role;
 
@@ -42,18 +44,29 @@ public class GamePlayService {
             role = "observer";
         }
         String notificationText = auth.username() + " connected as " + role;
-        return new GamePlayResult(new LoadGameMessage(game.game()), new NotificationMessage(notificationText));
+        return new GamePlayResult(List.of(new LoadGameMessage(game.game())), List.of(new NotificationMessage(notificationText)));
     }
 
 
     public GamePlayResult makeMove(MakeMoveCommand move) throws DataAccessException {
         GameData game = data.getGame(move.getGameID());
         AuthData auth = data.getAuth(move.getAuthToken());
+        String role;
+
         if (auth == null) {
-            return new GamePlayResult(new ErrorMessage("Error: invalid auth"), null);
+            return new GamePlayResult(List.of(new ErrorMessage("Error: invalid auth")), null);
         }
         if (game == null) {
-            return new GamePlayResult(new ErrorMessage("Error: invalid game ID"), null);
+            return new GamePlayResult(List.of(new ErrorMessage("Error: invalid game ID")), null);
+        }
+
+        if (auth.username().equals(game.whiteUsername())) {
+            role = "white";
+        } else if (auth.username().equals(game.blackUsername())) {
+            role = "black";
+        } else {
+            role = "observer";
+            return new GamePlayResult(List.of(new ErrorMessage("Invalid role: Must be a player")), null);
         }
 
     }
