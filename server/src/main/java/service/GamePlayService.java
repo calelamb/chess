@@ -46,8 +46,15 @@ public class GamePlayService {
     }
 
 
-    public GamePlayResult makeMove(MakeMoveCommand move) {
-        return null;
+    public GamePlayResult makeMove(MakeMoveCommand move) throws DataAccessException {
+        GameData game = data.getGame(move.getGameID());
+        AuthData auth = data.getAuth(move.getAuthToken());
+        if (auth == null) {
+            return new GamePlayResult(new ErrorMessage("Error: invalid auth"), null);
+        }
+        if (game == null) {
+            return new GamePlayResult(new ErrorMessage("Error: invalid game ID"), null);
+        }
 
     }
 
