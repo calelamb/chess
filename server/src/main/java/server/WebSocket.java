@@ -10,7 +10,7 @@ public class WebSocket {
 
     private HashMap<Integer, HashMap<Session, String>> sessions = new HashMap<>();
 
-    private void handleMessage(Session session, String jsonInput) {
+    public void handleMessage(Session session, String jsonInput) {
         UserGameCommand command = UserGameCommand.jsonToCommand(jsonInput);
         UserGameCommand.CommandType commandType = command.getCommandType();
 

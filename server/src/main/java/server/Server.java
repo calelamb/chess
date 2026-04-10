@@ -1,6 +1,7 @@
 package server;
 
 import dataaccess.DataAccess;
+
 import exception.DataAccessException;
 import dataaccess.MySqlDataAccess;
 import io.javalin.*;
@@ -27,6 +28,7 @@ public class Server {
         var listGamesHandler = new ListGamesHandler(new ListGamesService(dataAccess));
         var createGameHandler = new CreateGameHandler(new CreateGameService(dataAccess));
         var joinGameHandler = new JoinGameHandler(new JoinGameService(dataAccess));
+        var websocketHandler = new WebSocket();
 
         javalin.delete("/db", clearHandler::handle);
         javalin.post("/user", registerHandler::handle);
@@ -35,6 +37,19 @@ public class Server {
         javalin.get("/game", listGamesHandler::handle);
         javalin.post("/game", createGameHandler::handle);
         javalin.put("/game", joinGameHandler::handle);
+
+
+        javalin.ws("/ws", ws -> {
+            ws.onConnect(ctx -> {
+            });
+            ws.onMessage(ctx -> {
+                websocketHandler.handleMessage(ctx.session, ctx.message());
+            });
+            ws.onError(ctx -> {
+            });
+            ws.onClose(ctx -> {
+            });
+        });
 
     }
 
