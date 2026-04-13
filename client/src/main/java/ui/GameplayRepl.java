@@ -1,6 +1,8 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.DataAccessException;
@@ -104,7 +106,12 @@ public class GameplayRepl implements ServerMessageObserver {
                         break;
                     }
                     try {
-                        // todo
+                        int startCol = tokens[1].charAt(0) - 'a' + 1;
+                        int startRow = Character.getNumericValue(tokens[1].charAt(1));
+                        int endCol = tokens[2].charAt(0) - 'a' + 1;
+                        int endRow = Character.getNumericValue(tokens[2].charAt(1));
+                        ChessMove move = new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(endRow, endCol), null);
+                        facade.sendMakeMove(authToken, gID, move);
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
                     }
