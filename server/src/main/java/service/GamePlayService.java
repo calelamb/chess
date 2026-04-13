@@ -13,6 +13,7 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GamePlayService {
@@ -63,6 +64,10 @@ public class GamePlayService {
         }
 
         ChessGame chessGame = game.game();
+        if (chessGame.isGameOver()) {
+            return new GamePlayResult(List.of(new ErrorMessage("game is over")), null);
+        }
+
         if (auth.username().equals(game.whiteUsername())) {
             role = "white";
         } else if (auth.username().equals(game.blackUsername())) {
@@ -81,21 +86,43 @@ public class GamePlayService {
 
         try {
             chessGame.makeMove(move.getChessMove());
+            NotificationMessage stateNotification = null;
         } catch (InvalidMoveException e) {
             return new GamePlayResult(List.of(new ErrorMessage("Error: invalid move")), null);
         }
 
-        if (chessGame.isInCheckmate(chessGame.getTeamTurn()) || chessGame.isInStalemate(chessGame.getTeamTurn())) {
+        ChessGame.TeamColor opponentColor = chessGame.getTeamTurn();
+        String opponentUsername = opponentColor == ChessGame.TeamColor.WHITE
+                ? game.whiteUsername() : game.blackUsername();
+
+        NotificationMessage stateNotification = null;
+        if (chessGame.isInCheckmate(opponentColor)) {
             chessGame.setGameOver(true);
+            stateNotification = new NotificationMessage(opponentUsername + " is in checkmate");
+        } else if (chessGame.isInStalemate(opponentColor)) {
+            chessGame.setGameOver(true);
+            stateNotification = new NotificationMessage("Stalemate");
+        } else if (chessGame.isInCheck(opponentColor)) {
+            stateNotification = new NotificationMessage(opponentUsername + " is in check");
         }
 
         data.updateGame(game);
 
         String moveDesc = auth.username() + " moved " + move.getChessMove().toString();
-        return new GamePlayResult(
-                List.of(new LoadGameMessage(chessGame)),
-                List.of(new LoadGameMessage(chessGame), new NotificationMessage(moveDesc))
-        );
+
+        List<ServerMessage> toSender = new ArrayList<>();
+        toSender.add(new LoadGameMessage(chessGame));
+
+        List<ServerMessage> toOthers = new ArrayList<>();
+        toOthers.add(new LoadGameMessage(chessGame));
+        toOthers.add(new NotificationMessage(moveDesc));
+
+        if (stateNotification != null) {
+            toSender.add(stateNotification);
+            toOthers.add(stateNotification);
+        }
+
+        return new GamePlayResult(toSender, toOthers);
 
     }
 

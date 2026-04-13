@@ -14,12 +14,15 @@ import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class GameplayRepl implements ServerMessageObserver {
     private final String authToken;
     private final int gID;
-    private final WebSocketFacade facade;
+    private WebSocketFacade facade;
     private final Scanner input;
     private final String color;
     private ChessGame game;
@@ -44,6 +47,10 @@ public class GameplayRepl implements ServerMessageObserver {
         } else if (message instanceof NotificationMessage m) {
             System.out.println(m.getMessage());
         }
+    }
+
+    public void setFacade(WebSocketFacade f) {
+        this.facade = f;
     }
 
     private boolean hasExpectedArgs(String[] tokens, int expected) {
@@ -122,8 +129,20 @@ public class GameplayRepl implements ServerMessageObserver {
                         break;
                     }
                     try {
-                        //todo
-
+                        int col = tokens[1].charAt(0) - 'a' + 1;
+                        int row = Character.getNumericValue(tokens[1].charAt(1));
+                        ChessPosition selected = new ChessPosition(row, col);
+                        Collection<ChessMove> moves = game.validMoves(selected);
+                        if (moves == null || moves.isEmpty()) {
+                            System.out.println("No valid moves for that square");
+                            break;
+                        }
+                        Set<ChessPosition> highlights = new HashSet<>();
+                        for (ChessMove m : moves) {
+                            highlights.add(m.getEndPosition());
+                        }
+                        boolean whiteView = color == null || color.equals("WHITE");
+                        new BoardRenderer().drawBoard(game.getBoard(), whiteView, highlights, selected);
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
                     }

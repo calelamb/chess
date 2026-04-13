@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessBoard;
+import chess.ChessGame;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.DataAccessException;
@@ -131,9 +132,14 @@ public class PostloginRepl {
                         List<GameData> games = new ArrayList<>(s.listGames(a.authToken()));
                         GameData selectedGame = getSelectedGame(games, tokens[1]);
                         s.joinGame(a.authToken(), selectedGame.gameID(), tokens[2]);
-                        ChessBoard board = new ChessBoard();
-                        board.resetBoard();
-                        new BoardRenderer().drawBoard(board, tokens[2].equals("WHITE"));
+                        ChessGame game = new ChessGame();
+                        game.getBoard().resetBoard();
+                        GameplayRepl repl = new GameplayRepl(a.authToken(), selectedGame.gameID(), null, scanner, tokens[2], game);
+                        WebSocketFacade facade = new WebSocketFacade("ws://localhost:8080/ws", repl);
+                        repl.setFacade(facade);
+                        facade.connect();
+                        facade.sendConnect(a.authToken(), selectedGame.gameID());
+                        repl.run();
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
                     }
@@ -147,9 +153,14 @@ public class PostloginRepl {
                         List<GameData> games = new ArrayList<>(s.listGames(a.authToken()));
                         GameData selectedGame = getSelectedGame(games, tokens[1]);
                         s.joinGame(a.authToken(), selectedGame.gameID(), null);
-                        ChessBoard board = new ChessBoard();
-                        board.resetBoard();
-                        new BoardRenderer().drawBoard(board, true);
+                        ChessGame game = new ChessGame();
+                        game.getBoard().resetBoard();
+                        GameplayRepl repl = new GameplayRepl(a.authToken(), selectedGame.gameID(), null, scanner, null, game);
+                        WebSocketFacade facade = new WebSocketFacade("ws://localhost:8080/ws", repl);
+                        repl.setFacade(facade);
+                        facade.connect();
+                        facade.sendConnect(a.authToken(), selectedGame.gameID());
+                        repl.run();
 
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());

@@ -5,10 +5,19 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
+import java.util.Set;
+
 import static ui.EscapeSequences.*;
 
 public class BoardRenderer {
     public void drawBoard(ChessBoard board, boolean whiteView) {
+        drawBoard(board, whiteView, Set.of(), null);
+    }
+
+    public void drawBoard(ChessBoard board, boolean whiteView, Set<ChessPosition> highlights, ChessPosition selected) {
+        if (highlights == null) {
+            highlights = Set.of();
+        }
         int start, end, step;
         if (whiteView) {
             start = 8;
@@ -35,7 +44,8 @@ public class BoardRenderer {
                 colStep = -1;
             }
             for (int col = colStart; col != colEnd + colStep; col += colStep) {
-                System.out.print(getSquareColor(row, col) + getPieceSymbol(board.getPiece(new ChessPosition(row, col))));
+                ChessPosition pos = new ChessPosition(row, col);
+                System.out.print(getSquareColor(row, col, pos, highlights, selected) + getPieceSymbol(board.getPiece(pos)));
             }
             System.out.println(RESET_BG_COLOR + SET_BG_COLOR_DARK_GREY + " " + row + " " + RESET_BG_COLOR);
 
@@ -102,7 +112,14 @@ public class BoardRenderer {
         }
     }
 
-    private String getSquareColor(int row, int col) {
+    private String getSquareColor(int row, int col, ChessPosition pos,
+                                  Set<ChessPosition> highlights, ChessPosition selected) {
+        if (pos.equals(selected)) {
+            return SET_BG_COLOR_YELLOW;
+        }
+        if (highlights.contains(pos)) {
+            return SET_BG_COLOR_GREEN;
+        }
         if ((row + col) % 2 == 0) {
             return SET_BG_COLOR_LIGHT_GREY;
         } else {

@@ -21,6 +21,7 @@ public class WebSocketFacade extends Endpoint {
         this.obs = obs;
     }
 
+
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
         s = session;
