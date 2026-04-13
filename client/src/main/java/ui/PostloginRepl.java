@@ -152,7 +152,6 @@ public class PostloginRepl {
                     try {
                         List<GameData> games = new ArrayList<>(s.listGames(a.authToken()));
                         GameData selectedGame = getSelectedGame(games, tokens[1]);
-                        s.joinGame(a.authToken(), selectedGame.gameID(), null);
                         ChessGame game = new ChessGame();
                         game.getBoard().resetBoard();
                         GameplayRepl repl = new GameplayRepl(a.authToken(), selectedGame.gameID(), null, scanner, null, game);

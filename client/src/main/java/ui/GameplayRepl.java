@@ -41,7 +41,7 @@ public class GameplayRepl implements ServerMessageObserver {
     public void notifyMessage(String json, ServerMessage message) {
         if (message instanceof LoadGameMessage m) {
             game = m.getGame();
-            new BoardRenderer().drawBoard(game.getBoard(), color.equals("WHITE"));
+            new BoardRenderer().drawBoard(game.getBoard(), (color == null || color.equals("WHITE")));
         } else if (message instanceof ErrorMessage m) {
             System.out.println(m.getErrorMessage());
         } else if (message instanceof NotificationMessage m) {
@@ -85,7 +85,7 @@ public class GameplayRepl implements ServerMessageObserver {
 
                 case "redraw" -> {
                     try {
-                        new BoardRenderer().drawBoard(game.getBoard(), color.equals("WHITE"));
+                        new BoardRenderer().drawBoard(game.getBoard(), (color == null || color.equals("WHITE")));
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
                     }
@@ -141,7 +141,7 @@ public class GameplayRepl implements ServerMessageObserver {
                         for (ChessMove m : moves) {
                             highlights.add(m.getEndPosition());
                         }
-                        boolean whiteView = color == null || color.equals("WHITE");
+                        boolean whiteView = color == null || (color == null || color.equals("WHITE"));
                         new BoardRenderer().drawBoard(game.getBoard(), whiteView, highlights, selected);
                     } catch (Exception e) {
                         System.out.print("error: " + e.getMessage());
